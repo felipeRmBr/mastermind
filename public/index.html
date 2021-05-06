@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>MASTERMIND</title>
+
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- style sheet -->
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/push-button.css" />
+
+    <!-- font awesome -->
+    <link rel="stylesheet" href="./font-awesome/css/font-awesome.min.css" />
+  </head>
+
+  <body class="entry-point">
+    <div class="container" id="landing-options-container">
+      <h2 class="mastermind-title">MASTERMIND</h2>
+
+      <div class="horizontal-container">
+        <button class="pushable" id="new-session-button">
+          <span class="shadow"></span>
+          <span class="edge"></span>
+          <span class="front"> Create new session </span>
+        </button>
+
+        <button class="pushable" id="enter-code-button">
+          <span class="shadow"></span>
+          <span class="edge"></span>
+          <span class="front"> Enter session code </span>
+        </button>
+      </div>
+
+      <br />
+
+      <!-- <h2 class="code-label"></h2>
+
+      <div class="connection-label"></div> -->
+    </div>
+
+    <div class="container hide" id="username-container">
+      <div class="form-container">
+        <!-- <div class="small-span">Enter a user name</div> -->
+
+        <!-- <input class="name-input" type="text" placeholder="" /> -->
+        <h2 class="mastermind-title">MASTERMIND</h2>
+        <label for="fname" class="input-label"> Select a user-name </label>
+        <input
+          type="text"
+          id="fname_1"
+          name="firstname"
+          placeholder="your username"
+          class="form-input big-margin-bottom"
+        />
+
+        <!-- <button type="submit" class="kahoot-button">Continue</button> -->
+
+        <button class="pushable" id="code-request-button">
+          <span class="shadow"></span>
+          <span class="edge"></span>
+          <span class="front"> Continue </span>
+        </button>
+      </div>
+    </div>
+
+    <div class="container hide" id="username-pin-container">
+      <div class="form-container">
+        <!-- <div class="small-span">Enter a user name</div> -->
+
+        <!-- <input class="name-input" type="text" placeholder="" /> -->
+        <h2 class="mastermind-title">MASTERMIND</h2>
+        <label for="fname" class="input-label"> Select a user-name </label>
+        <input
+          type="text"
+          id="fname_2"
+          name="firstname"
+          placeholder="your username"
+          autocomplete="off"
+          class="form-input"
+        />
+
+        <label for="fpin" class="input-label"> Enter the session code </label>
+        <input
+          type="text"
+          id="fpin"
+          name="firstname"
+          placeholder="------"
+          class="form-input big-margin-bottom"
+        />
+
+        <!-- <button type="submit" class="kahoot-button">Continue</button> -->
+
+        <button class="pushable" id="enter-session-button">
+          <span class="shadow"></span>
+          <span class="edge"></span>
+          <span class="front"> Continue </span>
+        </button>
+      </div>
+    </div>
+
+    <div class="container hide" id="code-ready-container">
+      <h2 class="mastermind-title">MASTERMIND</h2>
+
+      <div class="legend-large">Your game session is ready:</div>
+
+      <div class="code" id="code-label">12345</div>
+
+      <div class="legend-large">
+        Send this PIN to your game partner and get ready to
+        <span class="bold-span"> MASTERMIND </span>
+      </div>
+    </div>
+
+    <div class="isa_error animate__animated hide" id="error-banner">
+      <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+      Session not found. Please check your code and try again.
+    </div>
+
+    <!-- <div class="my-notify-error">
+      Session not found. Please check your code and try again.
+    </div> -->
+
+    <script src="./socket.io/socket.io.js"></script>
+    <script src="./js/entry.js"></script>
+
+    <!-- animate css -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+  </body>
+</html>

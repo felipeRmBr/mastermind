@@ -1,0 +1,215 @@
+:root {
+  --large-font-size: 5vh;
+  --extra-large-font-size: 10vh;
+
+  --lighter-gray: #363636;
+  --light-gray: rgb(41, 41, 41);
+  --dark-gray: rgb(22, 22, 22);
+  --darker-gray: rgb(15, 15, 15);
+}
+
+html,
+body {
+  height: 99%; /* use 99% to avoid unneccesary scrollbar*/
+  width: 100%;
+  font-family: "Montserrat", sans-serif;
+  background: var(--lighter-gray);
+  color: var(--darker-gray);
+  margin: 0px;
+}
+
+.container {
+  height: 90%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.horizontal-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.mastermind-title {
+  align-self: center;
+  font-size: 2.4rem;
+  margin-bottom: 2.5rem;
+  color: white;
+}
+
+.legend-large {
+  font-size: var(--large-font-size);
+  text-align: center;
+  width: 60%;
+}
+
+.code {
+  font-size: var(--extra-large-font-size);
+  font-weight: bolder;
+  color: rgba(255, 255, 255, 0.733);
+
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.bold-span {
+  font-weight: bold;
+}
+
+.horizontal-container .pushable {
+  margin: 5px 15px;
+}
+
+/* FORM CONTAINER */
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  flex: 0 0 auto;
+  width: 21rem;
+}
+
+.input-label {
+  color: white;
+  width: 100%;
+  text-align: left;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-input {
+  border: none;
+  width: 100%;
+  height: 1.9rem;
+  line-height: 1.9rem;
+  border-radius: 3px;
+
+  font-size: 1rem;
+  text-align: center;
+  padding: 2.5px 0px;
+
+  margin-top: 0px;
+  margin-bottom: 20px;
+}
+
+.big-margin-bottom {
+  margin-top: 0px;
+  margin-bottom: 35px;
+}
+
+#entry-page-button {
+  width: auto;
+  /* height: 2rem; */
+  margin: 10px 15px;
+  /* float: right; */
+}
+
+.hide {
+  display: none;
+}
+
+/* EXTERNAL */
+table {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+.ticket-actual {
+  background-color: #282828;
+}
+
+.ticket-actual-numero {
+  font-size: 80px;
+}
+
+.ticket-actual-escritorio {
+  font-size: 45px;
+}
+
+.ticket-secundario {
+  font-size: 25px;
+}
+
+/* Nuevo-ticket */
+
+#lblNuevoTicket {
+  font-size: 70px;
+}
+
+.hide {
+  display: none;
+}
+
+.isa_info,
+.isa_success,
+.isa_warning,
+.isa_error {
+  margin: 0px;
+  padding: 3px;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  text-align: center;
+  opacity: 0.6;
+}
+.isa_info {
+  color: #00529b;
+  background-color: #bde5f8;
+}
+.isa_success {
+  color: #4f8a10;
+  background-color: #dff2bf;
+}
+.isa_warning {
+  color: #9f6000;
+  background-color: #feefb3;
+}
+.isa_error {
+  color: #d8000c;
+  background-color: #ffd2d2;
+}
+.isa_info i,
+.isa_success i,
+.isa_warning i,
+.isa_error i {
+  margin: 10px 22px;
+  font-size: 2em;
+  vertical-align: middle;
+}
+/* 
+
+.my-notify-error {
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.my-notify-error:before {
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: 400;
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: 0.2em;
+  text-align: center;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1em;
+  margin-left: 0.2em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.my-notify-error:before {
+  content: "\f057";
+}
+
+.my-notify-error {
+  color: #d8000c;
+  background-color: #ffd2d2;
+} */
