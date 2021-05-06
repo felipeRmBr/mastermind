@@ -42,32 +42,32 @@
         </div>
 
         <div class="column-item">
-          <div class="color-picker color-1"></div>
+          <div class="color-picker color-1 inactive"></div>
         </div>
 
         <div class="column-item">
-          <div class="color-picker color-2"></div>
+          <div class="color-picker color-2 inactive"></div>
         </div>
 
         <div class="column-item">
-          <div class="color-picker color-3"></div>
+          <div class="color-picker color-3 inactive"></div>
         </div>
 
         <div class="column-item">
-          <div class="color-picker color-4"></div>
+          <div class="color-picker color-4 inactive"></div>
         </div>
 
         <div class="column-item">
-          <div class="color-picker color-5"></div>
+          <div class="color-picker color-5 inactive"></div>
         </div>
 
         <div class="column-item">
           <div class="marble-picker-container">
-            <div class="marble-picker red"></div>
+            <div class="marble-picker red inactive"></div>
           </div>
 
           <div class="marble-picker-container">
-            <div class="marble-picker white"></div>
+            <div class="marble-picker white inactive"></div>
           </div>
         </div>
       </div>
@@ -519,7 +519,7 @@
       <button class="pushable" id="main-button">
         <span class="shadow"></span>
         <span class="edge"></span>
-        <span class="front"> Push Me </span>
+        <span class="front" id="button-front"> Push Me </span>
       </button>
     </div>
 
@@ -539,7 +539,7 @@
   </body>
 
   <script src="./socket.io/socket.io.js"></script>
-  <script src="./js/master-mind.js"></script>
+  <script src="./js/game/master-mind.js"></script>
   
 
 </html>

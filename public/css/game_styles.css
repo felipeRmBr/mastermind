@@ -236,6 +236,10 @@ body {
   cursor: pointer;
 }
 
+.secret-active .hole {
+  cursor: pointer;
+}
+
 .hole-border {
   display: inline-block;
   width: var(--hole-border-radius);
@@ -266,6 +270,10 @@ body {
 }
 
 .active-column-r1 .ball {
+  cursor: pointer;
+}
+
+.secret-active .ball {
   cursor: pointer;
 }
 
@@ -377,6 +385,14 @@ body {
   justify-content: center;
   width: 100%;
   margin-top: 15px;
+}
+
+.marble-picker-container .inactive {
+  cursor: default;
+}
+
+.inactive {
+  cursor: default;
 }
 
 .marble-picker {

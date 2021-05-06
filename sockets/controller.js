@@ -41,26 +41,52 @@ const socketController = (socket, io) => {
   socket.on("join-request", ({ sessionId }, callback) => {
     socket.join(sessionId);
     callback({ ok: true });
+    setTimeout(() => {
+      console.log("sending test to: ", sessionId);
+      io.to(sessionId).emit("test-emit", null);
+    }, 5000);
   });
 
-  socket.on(
-    "new-guess-move",
-    ({ sessionId, holeIdx, activeColorIdx }, callback) => {
-      io.to(sessionId).emit("guess-move-notification", {
-        type: "ball-movement",
-        holeIdx,
-        activeColorIdx,
-      });
-      callback({ ok: true });
-    }
-  );
+  socket.on("secret-ready", ({ sessionId, secret }) => {
+    socket.broadcast.to(sessionId).emit("secret-ready", { sessionId, secret });
+    //socket.to(sessionId).emit("secret-ready", { sessionId, secret });
+    console.log("secret arrived: ", secret);
+  });
+
+  socket.on("peg-hole-update", (payload) => {
+    socket.broadcast.to(payload.sessionId).emit("peg-hole-update", payload);
+    //socket.to(payload.sessionId).emit("peg-hole-update", payload);
+  });
+
+  socket.on("feedback-request", (payload) => {
+    console.log("feedback request arrived");
+    socket.broadcast.to(payload.sessionId).emit("feedback-request", payload);
+    //socket.to(payload.sessionId).emit("feedback-response", payload);
+  });
+
+  socket.on("feedback-response", (payload) => {
+    socket.broadcast.to(payload.sessionId).emit("feedback-response", payload);
+    //socket.to(payload.sessionId).emit("feedback-response", payload);
+  });
+
+  // socket.on(
+  //   "peg-hole-update",
+  //   ({ sessionId, pegHoleIdx, activeColorIdx }, callback) => {
+  //     io.to(sessionId).emit("guess-move-notification", {
+  //       type: "peg hole update",
+  //       pegHoleIdx,
+  //       activeColorIdx,
+  //     });
+  //     callback({ ok: true });
+  //   }
+  // );
 
   socket.on(
     "new-feedback-move",
-    ({ sessionId, marbleHoleIdx, activeMarble }, callback) => {
+    ({ sessionId, marbleSpaceIdx, activeMarble }, callback) => {
       io.to(sessionId).emit("feedback-move-notification", {
         type: "marble-movement",
-        marbleHoleIdx,
+        marbleSpaceIdx,
         activeMarble,
       });
       callback({ ok: true });
