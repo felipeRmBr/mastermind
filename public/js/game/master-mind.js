@@ -361,7 +361,7 @@ socket.on("feedback-request", ({ sessionId, activeColumnIdx }) => {
 
 const updateSecret = (e) => {
   // what position we need to update??
-  const audio = new Audio("../audio/clack1.mp3");
+  const audio = new Audio("../audio/select.mp3");
   audio.play();
 
   let positionIdx = e.target.idx % 4;

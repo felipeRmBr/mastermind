@@ -113,7 +113,7 @@ h3 {
   color: white;
 
   font-weight: bold;
-  text-align: right;
+  text-align: left;
 
   font-size: 1.5rem;
   line-height: 1.5rem;
@@ -497,4 +497,20 @@ h3 {
   margin-right: 15px;
   font-size: 1.7em;
   vertical-align: middle;
+}
+
+.usernames-container {
+  flex-grow: 1;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  font-family: "Press Start 2P", cursive;
+  font-size: 14px;
+}
+
+.username {
+  margin-top: 3px;
+  margin-bottom: 5px;
 }
