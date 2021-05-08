@@ -10,6 +10,7 @@
     <!-- style sheet -->
     <link rel="stylesheet" href="./css/game_styles.css" />
     <link rel="stylesheet" href="./css/push-button.css" />
+    <link rel="stylesheet" href="./css/loading.css" />
 
     <!-- google fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -536,6 +537,18 @@
         <i class="fa fa-linkedin-square" aria-hidden="true"></i>
       </div>
     </div>
+
+    <div class="wait-container" id="wait-message-container">
+      <h3 id="wait-message-div"></h3>
+      <div class="lds-ellipsis" id="wait-spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+    
+
   </body>
 
   <script src="./socket.io/socket.io.js"></script>

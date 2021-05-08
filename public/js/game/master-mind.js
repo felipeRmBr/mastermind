@@ -25,6 +25,13 @@ let { sessionId, role } = getInitialParams(queryString);
 const colors = ["blue", "yello", "green", "red", "white", "black"];
 const marbleColors = ["red", "white"];
 
+const [username1, username2] = ["Felipe", "Jacob"];
+const wait_messages = {
+  wait_secret: `${username2} is gettign the secret code ready.`,
+  wait_feedback: `${username2} is preparing your feedback.`,
+  wait_guess: `Wait for ${username1}'s guess to be ready.`,
+};
+
 let activeColorIdx = 0;
 let activeMarbleIdx = 0;
 let activeColumnIdx = 0;
@@ -44,6 +51,10 @@ const secretCodeCover = document.querySelector("#secret-cover");
 
 const mainButton = document.querySelector("#main-button");
 const buttonFront = document.querySelector("#button-front");
+const waitMessageDiv = document.querySelector("#wait-message-div");
+const waitSpinner = document.querySelector("#wait-spinner");
+
+const waitMessageContainer = document.querySelector("#wait-message-container");
 
 const initializeElements = () => {
   // initialize the idx of the colorPicker elements
@@ -70,6 +81,7 @@ const initializeElements = () => {
 };
 initializeElements();
 
+// HELPERS ---------------------------------
 const changeActiveColor = (e) => {
   colorPickers[activeColorIdx].classList.remove("active-color");
   colorPicker = e.target;
@@ -235,7 +247,19 @@ const deactivateSecretColumn = () => {
   });
 };
 
+const paintFeedback = (feedback) => {
+  // feedback is a 4 elements int array (example: [1,2,0,5])
+  feedback.forEach((marbleColor, idx) => {
+    marbleHoleIdx = activeColumnIdx * 4 + idx;
+    marbleHoles[marbleHoleIdx].classList.add(marbleColors[marbleColor]);
+  });
+};
+
 const prepareBoard = () => {
+  secret = [-1, -1, -1, -1];
+  guess = [-1, -1, -1, -1];
+  feedback = [-1, -1, -1, -1];
+
   if (role == 2) {
     // CODE MAKER
     activateColorPickers();
@@ -244,21 +268,22 @@ const prepareBoard = () => {
 
     buttonFront.innerHTML = "SECRET READY";
     mainButton.addEventListener("click", notifySecretReady);
+
+    hideWaitMessage();
   }
 
   if (role == 1) {
     // CODE MAKER
     secretCodeCover.classList.remove("hide");
     mainButton.classList.add("hide");
+
+    showWaitMessage("wait_secret");
   }
 };
 
 // SOCKET CONFIGURATIONS
 const socket = io();
 
-// const prepareSocketListeners(socket){
-
-// }
 // GENERAL CONFIGURATIONS (BOTH SIDES)
 socket.on("connect", () => {
   console.log("Connected to server!!");
@@ -296,6 +321,9 @@ socket.on("feedback-request", ({ sessionId, activeColumnIdx }) => {
   activateMarbleHoles(activeColumnIdx);
 
   buttonFront.innerHTML = "Send Feedback";
+
+  hideWaitMessage();
+
   mainButton.classList.remove("hide");
   mainButton.addEventListener("click", sendFeedback);
   //mainButton.classList.remove("hide");
@@ -309,13 +337,22 @@ const updateSecret = (e) => {
 };
 
 const notifySecretReady = (e) => {
+  if (secret.includes(-1)) {
+    alert("Your guess is incomplete, fill the the four peg holes.");
+    return;
+  }
+
   console.log(secret);
   deactivateSecretColumn();
   deactivateColorPickers();
 
-  mainButton.removeEventListener("click", notifySecretReady);
-  mainButton.classList.add("hide");
   socket.emit("secret-ready", { sessionId, secret });
+
+  // reset mainButton
+  mainButton.classList.add("hide");
+  mainButton.removeEventListener("click", notifySecretReady);
+
+  showWaitMessage("wait_guess");
 };
 
 const sendFeedback = () => {
@@ -327,6 +364,8 @@ const sendFeedback = () => {
   activeColumnIdx++;
   mainButton.removeEventListener("click", sendFeedback);
   mainButton.classList.add("hide");
+
+  showWaitMessage("wait_guess");
 };
 
 // CODE CRACKER SIDE
@@ -339,6 +378,8 @@ socket.on("secret-ready", (payload) => {
   activateColorPickers();
   activatePegHoles(0);
 
+  hideWaitMessage();
+
   buttonFront.innerHTML = "Request Feedback";
   mainButton.classList.remove("hide");
   mainButton.addEventListener("click", requestFeedback);
@@ -348,17 +389,15 @@ socket.on("feedback-response", ({ sessionId, feedback }) => {
   console.log("feedback response ready:");
   console.log({ sessionId, feedback });
 
-  feedback.forEach((marbleColor, idx) => {
-    marbleHoleIdx = activeColumnIdx * 4 + idx;
-    marbleHoles[marbleHoleIdx].classList.add(marbleColors[marbleColor]);
-  });
+  paintFeedback(feedback);
 
   activeColumnIdx++;
   activatePegHoles(activeColumnIdx);
 
+  hideWaitMessage();
+
   mainButton.classList.remove("hide");
-  //mainButton.addEventListener("click", requestFeedback);
-  //buttonFront.innerHTML = "Request Feedback";
+  mainButton.addEventListener("click", requestFeedback);
 });
 
 const sendPegHoleUpdate = (pegHoleIdx, activeColorIdx) => {
@@ -377,25 +416,31 @@ const sendPegHoleUpdate = (pegHoleIdx, activeColorIdx) => {
 
 const requestFeedback = () => {
   if (guess.includes(-1)) {
-    alert("Your guess is incomplete, fill the the four peg holes.");
+    alert("Your guess is incomplete, fill up the four peg holes.");
     return;
   }
 
   deactivatePegHoles(activeColumnIdx);
   socket.emit("feedback-request", { sessionId, activeColumnIdx });
 
+  resetGuess();
+
+  // reset mainButton (remove eventListener should be last)
   mainButton.classList.add("hide");
-  guess = [-1, -1, -1, -1];
-  //mainButton.removeEventListener("click", requestFeedback);
+  mainButton.removeEventListener("click", requestFeedback);
+
+  showWaitMessage("wait_feedback");
 };
 
-// SECRET-SETTING LOGIC
+const showWaitMessage = (messageType) => {
+  waitMessageDiv.innerHTML = wait_messages[messageType];
+  waitMessageContainer.classList.remove("hide");
+};
 
-// code-cracker side
-socket.on("feedback-move-notification", (payload) => {
-  // const { marbleHoleIdx, activeMarbleIdx } = payload;
-  // marbleHoles[marbleHoleIdx].className = `ball b${activeColorIdx}`;
-  console.log(payload);
-});
+const hideWaitMessage = () => {
+  waitMessageContainer.classList.add("hide");
+};
+
+const resetGuess = () => (guess = [-1, -1, -1, -1]);
 
 prepareBoard();
