@@ -56,6 +56,9 @@ const waitSpinner = document.querySelector("#wait-spinner");
 
 const waitMessageContainer = document.querySelector("#wait-message-container");
 
+const errorBanner = document.querySelector("#error-banner");
+const errorMessage = document.querySelector("#error-message");
+
 const initializeElements = () => {
   // initialize the idx of the colorPicker elements
   colorPickers.forEach((colorPicker, idx) => {
@@ -83,6 +86,9 @@ initializeElements();
 
 // HELPERS ---------------------------------
 const changeActiveColor = (e) => {
+  const audio = new Audio("../audio/click.mp3");
+  audio.play();
+
   colorPickers[activeColorIdx].classList.remove("active-color");
   colorPicker = e.target;
   activeColorIdx = colorPicker.color_idx;
@@ -115,6 +121,9 @@ const deactivateColorPickers = () => {
 };
 
 const changeActiveMarble = (e) => {
+  const audio = new Audio("../audio/click.mp3");
+  audio.play();
+
   marblePickers[activeMarbleIdx].classList.remove("active-marble-picker");
   activeMarble = e.target;
   activeMarbleIdx = activeMarble.marble_idx;
@@ -147,6 +156,9 @@ const deactivateMarblePickers = () => {
 };
 
 const updatePegHole = (e) => {
+  const audio = new Audio("../audio/select.mp3");
+  audio.play();
+
   let pegHole = e.target;
   pegHole.className = `ball b${activeColorIdx}`;
   sendPegHoleUpdate(pegHole.idx, activeColorIdx);
@@ -156,6 +168,9 @@ const updatePegHole = (e) => {
 };
 
 const updateMarbleHole = (e) => {
+  const audio = new Audio("../audio/select.mp3");
+  audio.play();
+
   marbleHole = e.target;
   marbleHole.classList.remove(`red`);
   marbleHole.classList.remove(`white`);
@@ -255,6 +270,18 @@ const paintFeedback = (feedback) => {
   });
 };
 
+const showErrormessage = (message) => {
+  errorMessage.innerHTML = message;
+  errorBanner.classList.remove("hide");
+  errorBanner.classList.remove("animate__fadeOut");
+  errorBanner.classList.add("animate__fadeIn");
+
+  setTimeout(() => {
+    errorBanner.classList.remove("animate__fadeIn");
+    errorBanner.classList.add("animate__fadeOut");
+  }, 2500);
+};
+
 const prepareBoard = () => {
   secret = [-1, -1, -1, -1];
   guess = [-1, -1, -1, -1];
@@ -316,6 +343,9 @@ socket.on("peg-hole-update", (payload) => {
 });
 
 socket.on("feedback-request", ({ sessionId, activeColumnIdx }) => {
+  const audio = new Audio("../audio/new-ticket.mp3");
+  audio.play();
+
   console.log("request arrived...");
   activateMarblePickers();
   activateMarbleHoles(activeColumnIdx);
@@ -331,6 +361,9 @@ socket.on("feedback-request", ({ sessionId, activeColumnIdx }) => {
 
 const updateSecret = (e) => {
   // what position we need to update??
+  const audio = new Audio("../audio/clack1.mp3");
+  audio.play();
+
   let positionIdx = e.target.idx % 4;
   secret[positionIdx] = activeColorIdx;
   e.target.className = `ball b${activeColorIdx}`;
@@ -338,9 +371,18 @@ const updateSecret = (e) => {
 
 const notifySecretReady = (e) => {
   if (secret.includes(-1)) {
-    alert("Your guess is incomplete, fill the the four peg holes.");
+    const audio = new Audio("../audio/error.mp3");
+    audio.play();
+
+    showErrormessage(
+      "Your secret code is incomplete. Fill up the four peg holes."
+    );
+
     return;
   }
+
+  const audio = new Audio("../audio/click.mp3");
+  audio.play();
 
   console.log(secret);
   deactivateSecretColumn();
@@ -348,28 +390,39 @@ const notifySecretReady = (e) => {
 
   socket.emit("secret-ready", { sessionId, secret });
 
-  // reset mainButton
-  mainButton.classList.add("hide");
-  mainButton.removeEventListener("click", notifySecretReady);
+  setTimeout(() => {
+    // reset mainButton
+    mainButton.classList.add("hide");
+    mainButton.removeEventListener("click", notifySecretReady);
 
-  showWaitMessage("wait_guess");
+    showWaitMessage("wait_guess");
+  }, 100);
 };
 
 const sendFeedback = () => {
+  const audio = new Audio("../audio/click.mp3");
+  audio.play();
+
   console.log("sending feedback: ", feedback);
   socket.emit("feedback-response", { sessionId, feedback });
 
   deactivateMarblePickers();
   deactivateMarbleHoles(activeColumnIdx);
   activeColumnIdx++;
-  mainButton.removeEventListener("click", sendFeedback);
-  mainButton.classList.add("hide");
 
-  showWaitMessage("wait_guess");
+  setTimeout(() => {
+    mainButton.removeEventListener("click", sendFeedback);
+    mainButton.classList.add("hide");
+
+    showWaitMessage("wait_guess");
+  }, 100);
 };
 
 // CODE CRACKER SIDE
 socket.on("secret-ready", (payload) => {
+  const audio = new Audio("../audio/new-ticket.mp3");
+  audio.play();
+
   console.log("secret ready");
   console.log(payload);
 
@@ -386,6 +439,9 @@ socket.on("secret-ready", (payload) => {
 });
 
 socket.on("feedback-response", ({ sessionId, feedback }) => {
+  const audio = new Audio("../audio/new-ticket.mp3");
+  audio.play();
+
   console.log("feedback response ready:");
   console.log({ sessionId, feedback });
 
@@ -416,9 +472,16 @@ const sendPegHoleUpdate = (pegHoleIdx, activeColorIdx) => {
 
 const requestFeedback = () => {
   if (guess.includes(-1)) {
-    alert("Your guess is incomplete, fill up the four peg holes.");
+    const audio = new Audio("../audio/error.mp3");
+    audio.play();
+
+    showErrormessage("Your guess is incomplete. Fill up the four peg holes.");
+
     return;
   }
+
+  const audio = new Audio("../audio/click.mp3");
+  audio.play();
 
   deactivatePegHoles(activeColumnIdx);
   socket.emit("feedback-request", { sessionId, activeColumnIdx });

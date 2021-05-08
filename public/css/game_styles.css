@@ -457,3 +457,44 @@ h3 {
   color: rgb(26, 26, 26);
   font-size: 34px;
 }
+
+/* INFO MESSAGES */
+.isa_info,
+.isa_success,
+.isa_warning,
+.isa_error {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.5em;
+  margin: 0px;
+  padding: 10px;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  text-align: center;
+  opacity: 0.5;
+}
+.isa_info {
+  color: #00529b;
+  background-color: #bde5f8;
+}
+.isa_success {
+  color: #4f8a10;
+  background-color: #dff2bf;
+}
+.isa_warning {
+  color: #9f6000;
+  background-color: #feefb3;
+}
+.isa_error {
+  color: #d8000c;
+  background-color: #ffd2d2;
+}
+
+.isa_info i,
+.isa_success i,
+.isa_warning i,
+.isa_error i {
+  margin-right: 15px;
+  font-size: 1.7em;
+  vertical-align: middle;
+}
