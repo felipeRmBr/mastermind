@@ -1,5 +1,3 @@
-# Aplicación de Colas con Socket.io
+# mastermind
 
-Un servidor de Websockets usando Node, Express y Socket.io
-
-
+A multiplayer implementation of the Mastermind board game.
