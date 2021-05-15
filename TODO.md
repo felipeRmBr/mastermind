@@ -1,0 +1,10 @@
+- enter functionality for inputs
+- jwt for authorization
+- winner and loser
+- solo game
+- stopwatch
+- controls (sound control)
+- dinamyc usernanems
+- connection
+- Center MATERMIND title
+- eliminar logs en server

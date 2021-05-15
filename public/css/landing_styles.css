@@ -40,6 +40,10 @@ body {
   justify-content: center;
 }
 
+.horizontal-container .pushable {
+  margin: 5px 15px;
+}
+
 .mastermind-title {
   align-self: center;
   font-size: 2.4rem;
@@ -64,10 +68,6 @@ body {
 
 .bold-span {
   font-weight: bold;
-}
-
-.horizontal-container .pushable {
-  margin: 5px 15px;
 }
 
 /* FORM CONTAINER */

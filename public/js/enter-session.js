@@ -1,6 +1,6 @@
-const enterSessionButton = document.querySelector("#enter-session-button");
 const usernameInput = document.querySelector("#username-input");
 const sessionPinInput = document.querySelector("#session-pin-input");
+const enterSessionButton = document.querySelector("#enter-session-button");
 
 const errorBanner = document.querySelector("#error-banner");
 const errorMessage = document.querySelector("#error-message");
