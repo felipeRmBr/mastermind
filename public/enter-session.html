@@ -41,8 +41,8 @@
   </head>
 
   <body class="entry-point">
-    <!-- 'new-session' container -->
-    <div class="container" id="new-session-container">
+    <!-- 'enter-session' container -->
+    <div class="container" id="enter-session-container">
       <div class="form-container">
         <!-- <div class="small-span">Enter a user name</div> -->
 
@@ -51,13 +51,25 @@
         <label for="fname" class="input-label"> Select a user-name </label>
         <input
           type="text"
-          id="username"
+          id="username-input"
           name="firstname"
           placeholder="your username"
+          autocomplete="off"
+          class="form-input"
+        />
+
+        <label for="fpin" class="input-label"> Enter the session code </label>
+        <input
+          type="text"
+          id="session-pin-input"
+          name="firstname"
+          placeholder="------"
           class="form-input big-margin-bottom"
         />
 
-        <button class="pushable" id="code-request-button">
+        <!-- <button type="submit" class="kahoot-button">Continue</button> -->
+
+        <button class="pushable" id="enter-session-button">
           <span class="shadow"></span>
           <span class="edge"></span>
           <span class="front"> Continue </span>
@@ -65,27 +77,13 @@
       </div>
     </div>
 
-    <!-- 'code-ready' container -->
-    <div class="container hide" id="code-ready-container">
-      <h2 class="mastermind-title">MASTERMIND</h2>
-
-      <div class="legend-large">Your game session is ready:</div>
-
-      <div class="code" id="code-label">12345</div>
-
-      <div class="legend-large">
-        Send this PIN to your game partner and get ready to
-        <span class="bold-span"> MASTERMIND </span>
-      </div>
-    </div>
-
     <div class="isa_error animate__animated hide" id="error-banner">
       <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-      Session not found. Please check your code and try again.
+      <span id="error-message">"SOME ERROR"</span>
     </div>
 
     <script src="./socket.io/socket.io.js"></script>
-    <script src="./js/new-session.js"></script>
+    <script src="./js/enter-session.js"></script>
 
     <!-- animate css -->
     <link
