@@ -502,7 +502,7 @@ const requestFeedback = () => {
 };
 
 const showWaitMessage = (messageType) => {
-  waitMessageDiv.innerHTML = wait_messages[messageType];
+  //waitMessageDiv.innerHTML = wait_messages[messageType];
   waitMessageContainer.classList.remove("hide");
 };
 

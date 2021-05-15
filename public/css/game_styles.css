@@ -62,16 +62,10 @@ h3 {
   padding: 0;
 }
 
-.wait-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
 .top-container {
   display: flex;
-  flex: 1 0 auto;
-  justify-content: center;
+  /* flex: 1 0 auto; */
+  justify-content: space-between;
   align-items: flex-start;
   width: var(--top-width);
   padding-top: 3em;
@@ -79,33 +73,19 @@ h3 {
 }
 
 .title-container {
-  display: flex;
+  justify-self: center;
+  flex-grow: 0;
+
   border-radius: 10px;
-
-  /* red background */
-  /* background: rgba(230, 27, 27, 0.836); */
-
-  /* red border */
-  /* border-style: solid;
-  border-color: rgba(230, 27, 27, 0.836);
-  border-width: medium; */
-
-  width: 20rem;
-  font-size: 2.5rem;
+  width: auto;
   height: 2.4rem;
   line-height: 2.4rem;
 
-  flex-grow: 0;
-}
-
-.head-title {
-  width: 100%;
-  text-align: center;
   font-family: "Montserrat", sans-serif;
-
-  font-weight: bold;
   color: white;
-  /*line-height: 70;*/
+  font-size: 2.5rem;
+  text-align: center;
+  font-weight: bold;
 }
 
 .timer {
@@ -121,7 +101,35 @@ h3 {
 
   margin-top: 3px;
 
-  flex-grow: 1;
+  flex-grow: 0;
+  justify-self: flex-start;
+  min-width: 230px;
+}
+
+.usernames-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+
+  font-family: "Press Start 2P", cursive;
+  color: white;
+  font-size: 13px;
+
+  justify-self: flex-end;
+  flex-grow: 0;
+  min-width: 230px;
+}
+
+.username {
+  margin-top: 3px;
+  margin-bottom: 5px;
+}
+
+.wait-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .bottom-container {
@@ -245,6 +253,16 @@ h3 {
   height: var(--hole-radius);
   margin: var(--hole-margin) var(--hole-margin);
   border-radius: 50%;
+}
+
+.active-column-r1 {
+  background-color: #252424;
+  border-radius: 15px;
+}
+
+.active-column-r2 {
+  background-color: #252424;
+  border-radius: 15px;
 }
 
 .active-column-r1 .hole {
@@ -497,20 +515,4 @@ h3 {
   margin-right: 15px;
   font-size: 1.7em;
   vertical-align: middle;
-}
-
-.usernames-container {
-  flex-grow: 1;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-end;
-  font-family: "Press Start 2P", cursive;
-  font-size: 14px;
-}
-
-.username {
-  margin-top: 3px;
-  margin-bottom: 5px;
 }
