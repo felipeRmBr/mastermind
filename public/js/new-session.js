@@ -6,13 +6,28 @@ const mainContainer = document.querySelector("#new-session-container");
 const usernameInput = document.querySelector("#username");
 const codeRequestButton = document.querySelector("#code-request-button");
 const codeLabel = document.querySelector("#code-label");
+
 const errorBanner = document.querySelector("#error-banner");
+const errorMessage = document.querySelector("#error-message");
+
 codeLabel.innerText = "No code available";
 
-const catchEnter = (e) => {
+const showErrormessage = (message) => {
+  errorMessage.innerHTML = message;
+  errorBanner.classList.remove("hide");
+  errorBanner.classList.remove("animate__fadeOut");
+  errorBanner.classList.add("animate__fadeIn");
+
+  setTimeout(() => {
+    errorBanner.classList.remove("animate__fadeIn");
+    errorBanner.classList.add("animate__fadeOut");
+  }, 2500);
+};
+
+const catchUsernameEnter = (e) => {
   if (e.which == 13) {
     if (usernameInput.value.length < 5) {
-      alert("Your username must be at least 5 characters long.");
+      showErrormessage("Your username must be at least five characters long.");
     } else {
       requestNewCode();
     }
@@ -59,5 +74,5 @@ socket.on("partner-ready", (payload) => {
   window.location = `game.html?session=${sessionCode}&player=1`;
 });
 
-usernameInput.addEventListener("keypress", catchEnter);
+usernameInput.addEventListener("keypress", catchUsernameEnter);
 codeRequestButton.addEventListener("click", requestNewCode);
