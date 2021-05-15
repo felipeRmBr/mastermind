@@ -1,8 +1,17 @@
 const { Socket } = require("socket.io");
 const GameSession = require("../models/game-session");
 
-let sessionCodes = [];
-let gameSessions = [];
+let sessionIds = [];
+let gameSessions = {};
+
+const getNewSessionPin = () => {
+  let newSessionPin = 0;
+  do {
+    newSessionPin = Math.floor(Math.random() * 9000) + 1000;
+  } while (sessionIds.includes(newSessionPin));
+
+  return newSessionPin;
+};
 
 const socketController = (socket, io) => {
   console.log("new connection");
@@ -11,27 +20,30 @@ const socketController = (socket, io) => {
   // socket.emit("estado-actual", ticketControl.ultimos4);
   // socket.emit("tickets-pendientes", ticketControl.tickets.length);
 
-  socket.on("code-request", ({ name }, callback) => {
-    const newSessionCode = Math.floor(Math.random() * 9000) + 1000;
+  socket.on("code-request", ({ username }, callback) => {
+    const newSessionPin = getNewSessionPin();
+    sessionIds.push(newSessionPin);
+    gameSessions[newSessionPin] = {
+      players: [username, null],
+    };
 
-    sessionCodes.push(newSessionCode);
     console.log(
-      `Session code request by: ${name}
-       New session code: ${newSessionCode}`
+      `Session code request by: ${username}. Session pin: ${newSessionPin}`
     );
 
-    socket.join(newSessionCode);
-    callback({ ok: true, newCode: newSessionCode });
+    socket.join(newSessionPin);
+    callback({ ok: true, newCode: newSessionPin });
   });
 
-  socket.on("code-verification", ({ code }, callback) => {
+  socket.on("code-verification", ({ pin, username }, callback) => {
     //console.log("verifying:", code);
-    //console.log(sessionCodes);
-    code = Number(code);
-    if (sessionCodes.includes(code)) {
-      // prepare the game-session
-      //gameSessions.push({ code: new GameSession() });
-      io.to(code).emit("partner-ready", null);
+    //console.log(sessionIds);
+    pin = Number(pin);
+    if (sessionIds.includes(pin)) {
+      gameSession = gameSessions[pin];
+      gameSession.players[1] = username;
+
+      io.to(pin).emit("partner-ready", null);
       callback({ ok: true });
     } else {
       callback({ ok: false });
@@ -40,11 +52,14 @@ const socketController = (socket, io) => {
 
   socket.on("join-request", ({ sessionId }, callback) => {
     socket.join(sessionId);
-    callback({ ok: true });
-    setTimeout(() => {
+    const gameSession = gameSessions[sessionId];
+    console.log(gameSessions);
+
+    callback({ players: gameSession.players });
+    /*     setTimeout(() => {
       console.log("sending test to: ", sessionId);
       io.to(sessionId).emit("test-emit", null);
-    }, 5000);
+    }, 5000); */
   });
 
   socket.on("secret-ready", ({ sessionId, secret }) => {

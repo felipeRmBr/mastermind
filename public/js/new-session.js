@@ -37,7 +37,7 @@ const catchUsernameEnter = (e) => {
 const requestNewCode = () => {
   socket.emit(
     "code-request",
-    { name: usernameInput.value },
+    { username: usernameInput.value },
     ({ ok, newCode }) => {
       if (!ok) {
         return (codeLable.innerText = "REQUEST ERROR!!!");

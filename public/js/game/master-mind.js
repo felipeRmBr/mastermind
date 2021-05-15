@@ -7,30 +7,12 @@ const getInitialParams = (queryString) => {
   return { sessionId, role };
 };
 
-const buttonClicked = (e) => {
-  console.log("Button Clicked!!!");
-};
-
-// class MainButton {
-//   constructor(document) {
-//     const mainButton = document.querySelector("#main-button");
-//     mainButton.addEventListener("click", buttonClicked);
-//   }
-// }
-
 // SessionId and role
 const queryString = window.location.search;
 let { sessionId, role } = getInitialParams(queryString);
 
 const colors = ["blue", "yello", "green", "red", "white", "black"];
 const marbleColors = ["red", "white"];
-
-const [username1, username2] = ["Felipe", "Jacob"];
-const wait_messages = {
-  wait_secret: `${username2} is gettign the secret code ready.`,
-  wait_feedback: `${username2} is preparing your feedback.`,
-  wait_guess: `Wait for ${username1}'s guess to be ready.`,
-};
 
 let activeColorIdx = 0;
 let activeMarbleIdx = 0;
@@ -53,11 +35,27 @@ const mainButton = document.querySelector("#main-button");
 const buttonFront = document.querySelector("#button-front");
 const waitMessageDiv = document.querySelector("#wait-message-div");
 const waitSpinner = document.querySelector("#wait-spinner");
-
 const waitMessageContainer = document.querySelector("#wait-message-container");
+
+const username1 = document.querySelector("#username-1");
+const username2 = document.querySelector("#username-2");
+const score1 = document.querySelector("#score-1");
+const score2 = document.querySelector("#score-2");
 
 const errorBanner = document.querySelector("#error-banner");
 const errorMessage = document.querySelector("#error-message");
+
+/* const wait_messages = {
+  wait_secret: `${username2} is gettign the secret code ready.`,
+  wait_feedback: `${username2} is preparing your feedback.`,
+  wait_guess: `Wait for ${username1}'s guess to be ready.`,
+};
+ */
+const wait_messages = {
+  wait_secret: ``,
+  wait_feedback: ``,
+  wait_guess: ``,
+};
 
 const initializeElements = () => {
   // initialize the idx of the colorPicker elements
@@ -82,6 +80,7 @@ const initializeElements = () => {
     marbleHole["column_idx"] = Math.floor(idx / 4);
   });
 };
+
 initializeElements();
 
 // HELPERS ---------------------------------
@@ -322,11 +321,18 @@ socket.on("disconnect", () => {
   // connectionLabel.innerText = "Disconnected!!";
 });
 
-socket.emit("join-request", { sessionId }, ({ ok }) => {
-  if (!ok) {
+socket.emit("join-request", { sessionId }, ({ players }) => {
+  if (!players) {
     console.log("problems joining the game-session");
     return;
   }
+
+  const [player1, player2] = players;
+  username1.innerHTML = player1;
+  username2.innerHTML = player2;
+  score1.innerHTML = "00";
+  score2.innerHTML = "00";
+
   console.log("joined to game-session");
 });
 

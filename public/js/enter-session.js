@@ -38,17 +38,17 @@ const catchPinEnter = (e) => {
         "You need to enter a valid session PIN (four digits int)."
       );
     } else {
-      sentSessionCode();
+      sentSessionPin();
     }
   }
 };
 
-const sentSessionCode = () => {
-  const sessionCode = sessionPinInput.value;
-
-  socket.emit("code-verification", { code: sessionCode }, ({ ok }) => {
+const sentSessionPin = () => {
+  const pin = sessionPinInput.value;
+  const username = usernameInput.value;
+  socket.emit("code-verification", { pin, username }, ({ ok }) => {
     if (!ok) {
-      console.log("No se encontró la sesíon");
+      /* console.log("No se encontró la sesíon"); */
 
       showErrormessage(
         "Session not found. Please check your PIN and try again."
@@ -58,7 +58,7 @@ const sentSessionCode = () => {
       return;
     }
 
-    window.location = `game.html?session=${sessionCode}&player=2`;
+    window.location = `game.html?session=${pin}&player=2`;
   });
 };
 
@@ -76,4 +76,4 @@ socket.on("disconnect", () => {
 
 usernameInput.addEventListener("keypress", catchUsernameEnter);
 sessionPinInput.addEventListener("keypress", catchPinEnter);
-enterSessionButton.addEventListener("click", sentSessionCode);
+enterSessionButton.addEventListener("click", sentSessionPin);
