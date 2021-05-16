@@ -44,6 +44,10 @@ body {
   margin: 5px 15px;
 }
 
+.horizontal-container .front {
+  width: 145px;
+}
+
 .mastermind-title {
   align-self: center;
   font-size: 2.4rem;
@@ -176,6 +180,9 @@ body {
   font-size: 34px;
 }
 
+.invisible {
+  visibility: hidden;
+}
 .hide {
   display: none;
 }

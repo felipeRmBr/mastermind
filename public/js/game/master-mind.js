@@ -14,6 +14,7 @@ let { sessionId, role } = getInitialParams(queryString);
 const colors = ["blue", "yello", "green", "red", "white", "black"];
 const marbleColors = ["red", "white"];
 
+let gameIdx = 0;
 let activeColorIdx = 0;
 let activeMarbleIdx = 0;
 let activeColumnIdx = 0;
@@ -39,6 +40,10 @@ const waitMessageContainer = document.querySelector("#wait-message-container");
 
 const username1 = document.querySelector("#username-1");
 const username2 = document.querySelector("#username-2");
+const activeSpan1 = document.querySelector("#active-span-1");
+const activeSpan2 = document.querySelector("#active-span-2");
+const roleSpan1 = document.querySelector("#role-user-1");
+const roleSpan2 = document.querySelector("#role-user-2");
 const score1 = document.querySelector("#score-1");
 const score2 = document.querySelector("#score-2");
 
@@ -281,6 +286,15 @@ const showErrormessage = (message) => {
   }, 2500);
 };
 
+const switchActiveIndicator = () => {
+  activeSpan1.innerHTML.length == 0
+    ? (activeSpan1.innerHTML = "*")
+    : (activeSpan1.innerHTML = "");
+  activeSpan2.innerHTML.length == 0
+    ? (activeSpan2.innerHTML = "*")
+    : (activeSpan2.innerHTML = "");
+};
+
 const prepareBoard = () => {
   secret = [-1, -1, -1, -1];
   guess = [-1, -1, -1, -1];
@@ -305,6 +319,12 @@ const prepareBoard = () => {
 
     showWaitMessage("wait_secret");
   }
+
+  roleSpan1.innerHTML = gameIdx % 2 == 0 ? "(CB)" : "(CM)";
+  roleSpan2.innerHTML = gameIdx % 2 == 0 ? "(CM)" : "(CB)";
+
+  activeSpan1.innerHTML = "";
+  activeSpan2.innerHTML = "*";
 };
 
 // SOCKET CONFIGURATIONS
@@ -349,6 +369,8 @@ socket.on("peg-hole-update", (payload) => {
 });
 
 socket.on("feedback-request", ({ sessionId, activeColumnIdx }) => {
+  switchActiveIndicator();
+
   const audio = new Audio("../audio/new-ticket.mp3");
   audio.play();
 
@@ -388,6 +410,8 @@ const notifySecretReady = (e) => {
     return;
   }
 
+  switchActiveIndicator();
+
   const audio = new Audio("../audio/click.mp3");
   audio.play();
 
@@ -410,6 +434,8 @@ const notifySecretReady = (e) => {
 };
 
 const sendFeedback = () => {
+  switchActiveIndicator();
+
   const audio = new Audio("../audio/click.mp3");
   audio.play();
 
@@ -433,6 +459,8 @@ const sendFeedback = () => {
 
 // CODE CRACKER SIDE
 socket.on("secret-ready", (payload) => {
+  switchActiveIndicator();
+
   const audio = new Audio("../audio/new-ticket.mp3");
   audio.play();
 
@@ -452,6 +480,8 @@ socket.on("secret-ready", (payload) => {
 });
 
 socket.on("feedback-response", ({ sessionId, feedback }) => {
+  switchActiveIndicator();
+
   const audio = new Audio("../audio/new-ticket.mp3");
   audio.play();
 
@@ -496,6 +526,8 @@ const requestFeedback = () => {
     return;
   }
 
+  switchActiveIndicator();
+
   const audio = new Audio("../audio/click.mp3");
   audio.play();
 
@@ -522,4 +554,37 @@ const hideWaitMessage = () => {
 const resetFeedback = () => (feedback = [-1, -1, -1, -1]);
 const resetGuess = () => (guess = [-1, -1, -1, -1]);
 
+/* MODAL CONTROL */
+const modal = document.querySelector(".modal");
+const overlay = document.querySelector(".overlay");
+const btnCloseModal = document.querySelector(".close-modal");
+const firstGameLegend = document.querySelector("#first-game-legend");
+
+const legendPlayer1 =
+  "On the first game you play CODEBRAKER and your friend plays CODEMAKER.";
+const legendPlayer2 =
+  "On the first game you play CODEMAKER and your friend plays CODEBRAKER.";
+firstGameLegend.innerHTML = role == 1 ? legendPlayer1 : legendPlayer2;
+
+const openModal = function () {
+  modal.classList.remove("hidden");
+  overlay.classList.remove("hidden");
+};
+
+const closeModal = function () {
+  modal.classList.add("hidden");
+  overlay.classList.add("hidden");
+};
+
+btnCloseModal.addEventListener("click", closeModal);
+overlay.addEventListener("click", closeModal);
+
+document.addEventListener("keydown", function (e) {
+  // console.log(e.key);
+  if (e.key === "Escape" && !modal.classList.contains("hidden")) {
+    closeModal();
+  }
+});
+
 prepareBoard();
+openModal();

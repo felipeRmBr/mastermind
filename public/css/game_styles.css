@@ -43,14 +43,22 @@
   --darker-gray: rgb(15, 15, 15);
 }
 
+html {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  background: var(--lighter-gray);
+}
+
 body {
-  font-size: 10px;
+  margin: 0px;
+  padding: 0px;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   background: var(--lighter-gray);
   min-width: 1060px;
-  /* min-height: 560px; */
 }
 
 h3 {
@@ -465,15 +473,15 @@ h3 {
 
 .icon {
   cursor: pointer;
-  width: 75px;
   color: rgb(41, 41, 41);
-  font-size: 30px;
-  margin-bottom: 15px;
+  font-size: 35px;
+  margin-bottom: 6px;
+  margin-top: 10px;
 }
 
 .icon:hover {
   color: rgb(26, 26, 26);
-  font-size: 34px;
+  font-size: 40px;
 }
 
 /* INFO MESSAGES */
@@ -482,7 +490,7 @@ h3 {
 .isa_warning,
 .isa_error {
   font-family: "Montserrat", sans-serif;
-  font-size: 1.5em;
+  font-size: 1em;
   margin: 0px;
   padding: 10px;
   position: absolute;
@@ -515,4 +523,49 @@ h3 {
   margin-right: 15px;
   font-size: 1.7em;
   vertical-align: middle;
+}
+
+.close-modal {
+  position: absolute;
+  top: 13px;
+  right: 20px;
+  font-size: 3rem;
+  color: #333;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+.modal {
+  font-family: sans-serif;
+  color: #333;
+  font-size: 18px;
+  line-height: 30px;
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+
+  background-color: white;
+  padding: 3rem 4.5rem 3rem 4.5rem;
+  border-radius: 12px;
+
+  /*box-shadow: 0 1rem 1.5rem rgba(0, 0, 0, 0.3);*/
+  z-index: 10;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 5;
+}
+
+.hidden {
+  display: none;
 }
