@@ -19,8 +19,11 @@
       rel="stylesheet"
     />
 
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
 
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
@@ -32,13 +35,18 @@
 
   <body>
     <div class="top-container">
-      <div class="timer">&#9201 09:45</div>
+      <div class="timer">
+        GAME:
+        <span id="game-span">1</span>
+        /
+        <span id="total-games-span">6</span>
+      </div>
       <div class="title-container">
         <div class="head-title">MASTERMIND</div>
       </div>
       <!-- <div class="timer">&#9201 09:45</div> -->
       <div class="usernames-container">
-        <div class="username"> 
+        <div class="username">
           <span id="active-span-1"></span>
           <span id="username-1"></span>
           <span id="role-user-1"></span>
@@ -51,7 +59,6 @@
           <span id="score-2"></span>
         </div>
       </div>
-      
     </div>
 
     <div class="board">
@@ -82,11 +89,11 @@
 
         <div class="column-item">
           <div class="marble-picker-container">
-            <div class="marble-picker red inactive"></div>
+            <div class="marble-picker white inactive"></div>
           </div>
 
           <div class="marble-picker-container">
-            <div class="marble-picker white inactive"></div>
+            <div class="marble-picker red inactive"></div>
           </div>
         </div>
       </div>
@@ -570,38 +577,39 @@
       <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
       <span id="error-message">"SOME ERROR"</span>
     </div>
-    
+
     <div class="modal hidden">
       <button class="close-modal">&times;</button>
-      <h2>Welcome to MASTERMIND ❗❗❗ </h2>
+      <h2>Welcome to MASTERMIND ❗❗❗</h2>
       <p>
-        This will be a six games battle. At every
-        game there will be two alternating roles, a CODEMAKER and a 
-        CODEBRAKER. The <i>codemaker</i> will choose a secret code and
-        the <i>codebraker</i> will have up to 10 guesses to brake it.
-        The <i>codemaker</i> wins one point for every wrong guess of the 
-        <i>codebraker</i>, and gets one extra point if the <i>codebraker</i> fails to 
-        brake the code after the 10 guesses. The champion of the  
-        battle will be the player with the highest score after the six games.
-        <br>
-        <br>
-        <span id="first-game-legend">On the first game you play CODEBRAKER and Jacob plays CODEMAKER.</span>
-        <br>
-        <br>
+        This will be a six games battle. At every game there will be two
+        alternating roles, a CODEMAKER and a CODEBRAKER. The
+        <i>codemaker</i> will choose a secret code and the
+        <i>codebraker</i> will have up to 10 guesses to brake it. The
+        <i>codemaker</i> wins one point for every wrong guess of the
+        <i>codebraker</i>, and gets one extra point if the
+        <i>codebraker</i> fails to brake the code after the 10 guesses. The
+        champion of the battle will be the player with the highest score after
+        the six games.
+        <br />
+        <br />
+        <span id="first-game-legend"
+          >On the first game you play CODEBRAKER and Jacob plays
+          CODEMAKER.</span
+        >
+        <br />
+        <br />
         <span class="modal-circles">🔵 🟡 🟢 🔴 ⚪ ⚫</span>
-        
       </p>
     </div>
     <div class="overlay hidden"></div>
-
   </body>
 
   <script src="./socket.io/socket.io.js"></script>
   <script src="./js/game/master-mind.js"></script>
 
   <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-    />
-
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
 </html>
