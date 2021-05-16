@@ -362,7 +362,8 @@ socket.on("feedback-request", ({ sessionId, activeColumnIdx }) => {
 
   mainButton.classList.remove("hide");
   mainButton.addEventListener("click", sendFeedback);
-  //mainButton.classList.remove("hide");
+
+  resetFeedback();
 });
 
 const updateSecret = (e) => {
@@ -390,7 +391,7 @@ const notifySecretReady = (e) => {
   const audio = new Audio("../audio/click.mp3");
   audio.play();
 
-  console.log(secret);
+  /* console.log(secret); */
   deactivateSecretColumn();
   deactivateColorPickers();
 
@@ -403,6 +404,9 @@ const notifySecretReady = (e) => {
 
     showWaitMessage("wait_guess");
   }, 100);
+
+  activeColumnIdx = 0;
+  activateMarbleHoles(activeColumnIdx);
 };
 
 const sendFeedback = () => {
@@ -412,9 +416,12 @@ const sendFeedback = () => {
   console.log("sending feedback: ", feedback);
   socket.emit("feedback-response", { sessionId, feedback });
 
-  deactivateMarblePickers();
-  deactivateMarbleHoles(activeColumnIdx);
+  const lastActiveColumnIdx = activeColumnIdx;
   activeColumnIdx++;
+
+  deactivateMarblePickers();
+  deactivateMarbleHoles(lastActiveColumnIdx);
+  activateMarbleHoles(activeColumnIdx);
 
   setTimeout(() => {
     mainButton.removeEventListener("click", sendFeedback);
@@ -453,7 +460,10 @@ socket.on("feedback-response", ({ sessionId, feedback }) => {
 
   paintFeedback(feedback);
 
+  const lastActiveColumnIdx = activeColumnIdx;
   activeColumnIdx++;
+
+  deactivatePegHoles(lastActiveColumnIdx);
   activatePegHoles(activeColumnIdx);
 
   hideWaitMessage();
@@ -489,7 +499,6 @@ const requestFeedback = () => {
   const audio = new Audio("../audio/click.mp3");
   audio.play();
 
-  deactivatePegHoles(activeColumnIdx);
   socket.emit("feedback-request", { sessionId, activeColumnIdx });
 
   resetGuess();
@@ -510,6 +519,7 @@ const hideWaitMessage = () => {
   waitMessageContainer.classList.add("hide");
 };
 
+const resetFeedback = () => (feedback = [-1, -1, -1, -1]);
 const resetGuess = () => (guess = [-1, -1, -1, -1]);
 
 prepareBoard();
