@@ -36,10 +36,7 @@
   <body>
     <div class="top-container">
       <div class="timer">
-        GAME:
-        <span id="game-span">1</span>
-        /
-        <span id="total-games-span">6</span>
+        <span id="game-span"></span>
       </div>
       <div class="title-container">
         <div class="head-title">MASTERMIND</div>
@@ -508,7 +505,7 @@
         </div>
       </div>
 
-      <div class="board-column secret hide" id="secret-code">
+      <div class="board-column secret hidden" id="secret-code">
         <div class="column-item">
           <div class="hole-border shade1"></div>
 
@@ -536,17 +533,60 @@
         <div class="column-item"></div>
       </div>
 
-      <div class="board-column secret hide" id="secret-cover">
+      <div class="board-column secret hidden" id="secret-cover">
         <div class="cover-top"></div>
       </div>
     </div>
 
-    <div class="bottom-container">
+    <div class="bottom-container hidden" id="button-container">
       <button class="pushable" id="main-button">
         <span class="shadow"></span>
         <span class="edge"></span>
         <span class="front" id="button-front"> Push Me </span>
       </button>
+    </div>
+
+    <div class="bottom-container hidden" id="wait-indicator-container">
+      <div class="lds-ellipsis" id="wait-spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+
+    <div
+      class="bottom-container next-game-countdown hidden"
+      id="next-game-countdown"
+    >
+      <span class="small-font">Next game will start in:</span>
+      <span class="large-font animate__animated animate__faster" id="countdown">
+        5
+      </span>
+    </div>
+
+    <div class="modal hidden">
+      <button class="close-modal">&times;</button>
+      <h2>Welcome to MASTERMIND ❗❗❗</h2>
+      <p>
+        This will be a six games match. At every game there will be two
+        alternating roles, a CODEMAKER and a CODEBRAKER. The
+        <i>codemaker</i> will choose a secret code and the
+        <i>codebraker</i> will have up to 10 guesses to brake it. The
+        <i>codemaker</i> wins one point for every wrong guess made by the
+        <i>codebraker</i>, and gets one extra point if the
+        <i>codebraker</i> fails to brake the code after the 10 guesses. The
+        winner of the match will be the player with the highest score after the
+        six games.
+        <br />
+        <br />
+        <span class="modal-circles">🔵 🟡 🟢 🔴 ⚪ ⚫</span>
+      </p>
+    </div>
+
+    <div class="big-banner-container hidden" id="big-banner">
+      <h1 class="title" id="big-banner-counter"></h1>
+      <h3 class="title" id="big-banner-role-legend">You play CODEMAKER.</h3>
     </div>
 
     <div class="buttons-container">
@@ -563,45 +603,11 @@
       </div>
     </div>
 
-    <div class="wait-container" id="wait-message-container">
-      <!-- <h3 id="wait-message-div"></h3> -->
-      <div class="lds-ellipsis" id="wait-spinner">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-    </div>
-
-    <div class="isa_error animate__animated hide" id="error-banner">
+    <div class="isa_error animate__animated hidden" id="error-banner">
       <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
       <span id="error-message">"SOME ERROR"</span>
     </div>
 
-    <div class="modal hidden">
-      <button class="close-modal">&times;</button>
-      <h2>Welcome to MASTERMIND ❗❗❗</h2>
-      <p>
-        This will be a six games battle. At every game there will be two
-        alternating roles, a CODEMAKER and a CODEBRAKER. The
-        <i>codemaker</i> will choose a secret code and the
-        <i>codebraker</i> will have up to 10 guesses to brake it. The
-        <i>codemaker</i> wins one point for every wrong guess of the
-        <i>codebraker</i>, and gets one extra point if the
-        <i>codebraker</i> fails to brake the code after the 10 guesses. The
-        champion of the battle will be the player with the highest score after
-        the six games.
-        <br />
-        <br />
-        <span id="first-game-legend"
-          >On the first game you play CODEBRAKER and Jacob plays
-          CODEMAKER.</span
-        >
-        <br />
-        <br />
-        <span class="modal-circles">🔵 🟡 🟢 🔴 ⚪ ⚫</span>
-      </p>
-    </div>
     <div class="overlay hidden"></div>
   </body>
 

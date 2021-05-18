@@ -51,15 +51,17 @@ const socketController = (socket, io) => {
   });
 
   socket.on("join-request", ({ sessionId }, callback) => {
-    socket.join(sessionId);
-    const gameSession = gameSessions[sessionId];
-    console.log(gameSessions);
+    if (sessionId == 1111) {
+      // debugging
+      socket.join(sessionId);
+      callback({ players: ["Felipe", "Jacob"] });
+    } else {
+      socket.join(sessionId);
+      const gameSession = gameSessions[sessionId];
+      console.log(gameSessions);
 
-    callback({ players: gameSession.players });
-    /*     setTimeout(() => {
-      console.log("sending test to: ", sessionId);
-      io.to(sessionId).emit("test-emit", null);
-    }, 5000); */
+      callback({ players: gameSession.players });
+    }
   });
 
   socket.on("secret-ready", ({ sessionId, secret }) => {
@@ -83,30 +85,6 @@ const socketController = (socket, io) => {
     socket.broadcast.to(payload.sessionId).emit("feedback-response", payload);
     //socket.to(payload.sessionId).emit("feedback-response", payload);
   });
-
-  // socket.on(
-  //   "peg-hole-update",
-  //   ({ sessionId, pegHoleIdx, activeColorIdx }, callback) => {
-  //     io.to(sessionId).emit("guess-move-notification", {
-  //       type: "peg hole update",
-  //       pegHoleIdx,
-  //       activeColorIdx,
-  //     });
-  //     callback({ ok: true });
-  //   }
-  // );
-
-  socket.on(
-    "new-feedback-move",
-    ({ sessionId, marbleSpaceIdx, activeMarble }, callback) => {
-      io.to(sessionId).emit("feedback-move-notification", {
-        type: "marble-movement",
-        marbleSpaceIdx,
-        activeMarble,
-      });
-      callback({ ok: true });
-    }
-  );
 
   // socket.on("siguiente-ticket", (payload, callback) => {
   //   const siguiente = ticketControl.siguiente();

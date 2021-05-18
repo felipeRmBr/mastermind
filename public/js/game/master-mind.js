@@ -4,16 +4,19 @@ const getInitialParams = (queryString) => {
 
   const sessionId = Number(sessionParams.get("session"));
   const role = Number(sessionParams.get("player"));
+  const playerId = role;
 
-  return { sessionId, role };
+  return { sessionId, role, playerId };
 };
 
 const queryString = window.location.search;
-let { sessionId, role } = getInitialParams(queryString);
+let { sessionId, role, playerId } = getInitialParams(queryString);
 
 const colors = ["blue", "yello", "green", "red", "white", "black"];
 const marbleColors = ["white", "red"];
 
+const nGames = 4;
+let currentRole = playerId == 1 ? "CB" : "CM"; // player 1 always starts as CB
 let gameIdx = 0;
 let activeColorIdx = 0;
 let activeMarbleIdx = 0;
@@ -22,6 +25,22 @@ let secret = [-1, -1, -1, -1];
 let guess = [-1, -1, -1, -1];
 let feedback = [-1, -1, -1, -1];
 let scores = [0, 0];
+
+/*-----------------------------------------------------------------*/
+/*--------------------- GENERAL GAME CONTROL ----------------------*/
+/*-----------------------------------------------------------------*/
+
+/* Pickers */
+const colorPickers = document.querySelectorAll(".color-picker");
+const marblePickers = document.querySelectorAll(".marble-picker");
+
+/* Board Columns */
+const boardColumns = document.querySelectorAll(".board-column");
+const pegHoles = Array.from(document.querySelectorAll(".hole"));
+const marbleHoles = Array.from(document.querySelectorAll(".marble-hole"));
+
+const secretCodeColumn = document.querySelector("#secret-code");
+const secretCodeCover = document.querySelector("#secret-cover");
 
 /* Top container elements */
 const gameSpan = document.querySelector("#game-span");
@@ -35,43 +54,24 @@ const roleSpan2 = document.querySelector("#role-user-2");
 const score1 = document.querySelector("#score-1");
 const score2 = document.querySelector("#score-2");
 
-/* Board Elements */
+/* Bottom elements*/
 
-const colorPickers = document.querySelectorAll(".color-picker");
-const marblePickers = document.querySelectorAll(".marble-picker");
-
-const boardColumns = document.querySelectorAll(".board-column");
-const pegHoles = Array.from(document.querySelectorAll(".hole"));
-const marbleHoles = Array.from(document.querySelectorAll(".marble-hole"));
-
-const secretCodeColumn = document.querySelector("#secret-code");
-const secretCodeCover = document.querySelector("#secret-cover");
-
-/* Bottom container elements */
+/* Button */
+const buttoncontainer = document.querySelector("#button-container");
 const mainButton = document.querySelector("#main-button");
 const buttonFront = document.querySelector("#button-front");
 
-const waitMessageDiv = document.querySelector("#wait-message-div");
+/* Wait Indicator */
+const waitIndicatorContainer = document.querySelector(
+  "#wait-indicator-container"
+);
 const waitSpinner = document.querySelector("#wait-spinner");
-const waitMessageContainer = document.querySelector("#wait-message-container");
 
-/* Error banner */
-const errorBanner = document.querySelector("#error-banner");
-const errorMessage = document.querySelector("#error-message");
+/* Next game countdown */
+const nextGameCountdown = document.querySelector("#next-game-countdown");
+const countdown = document.querySelector("#countdown");
 
-/* const wait_messages = {
-  wait_secret: `${username2} is gettign the secret code ready.`,
-  wait_feedback: `${username2} is preparing your feedback.`,
-  wait_guess: `Wait for ${username1}'s guess to be ready.`,
-};
- */
-const wait_messages = {
-  wait_secret: ``,
-  wait_feedback: ``,
-  wait_guess: ``,
-};
-
-// HELPERS ---------------------------------
+/*------------- MAIN FUNCTIONS --------------*/
 const initializeElements = () => {
   // initialize the idx of the colorPicker elements
   colorPickers.forEach((colorPicker, idx) => {
@@ -96,7 +96,54 @@ const initializeElements = () => {
   });
 };
 
-initializeElements();
+const prepareBoard = () => {
+  gameSpan.innerHTML = `GAME: ${gameIdx + 1}/${nGames}`;
+
+  if (currentRole == "CB") {
+    // CODE BRAKER
+    secretCodeCover.classList.remove("hidden");
+    showWaitIndicator();
+  }
+
+  if (currentRole == "CM") {
+    // CODE MAKER
+    activateColorPickers();
+    activateSecretColumn();
+    secretCodeColumn.classList.remove("hidden");
+
+    buttonFront.innerHTML = "Secret Ready";
+    mainButton.addEventListener("click", notifySecretReady);
+    showButtonContainer();
+  }
+
+  // playerId=1 plays CB on even gameIdx (0 indexing)
+  // playerId=2 plays CB on odd gameIdx (0 indexing)
+  if (gameIdx % 2 == 0) {
+    roleSpan1.innerHTML = `(CB)`;
+    roleSpan2.innerHTML = `(CM)`;
+    activeSpan1.innerHTML = "";
+    activeSpan2.innerHTML = "*";
+  } else if (gameIdx % 2 == 1) {
+    roleSpan1.innerHTML = `(CM)`;
+    roleSpan2.innerHTML = `(CB)`;
+    activeSpan1.innerHTML = "*";
+    activeSpan2.innerHTML = "";
+  }
+};
+
+const nextGame = () => {
+  resetBoard();
+  gameIdx++;
+
+  // switch roles
+  currentRole = currentRole == "CM" ? "CB" : "CM";
+
+  prepareBoard();
+  showBigBanner(
+    `GAME ${gameIdx + 1}/${nGames}`,
+    `You play ${(playerId + gameIdx) % 2 == 0 ? "CODEMAKER" : "CODEBRAKER"}`
+  );
+};
 
 const resetBoard = () => {
   activeColorIdx = 0;
@@ -120,27 +167,25 @@ const resetBoard = () => {
     marbleHole.classList.remove(`white`);
   });
 
-  secretCodeColumn.className = "board-column secret hide";
-  secretCodeCover.className = "board-column secret hide";
+  secretCodeColumn.className = "board-column secret hidden";
+  secretCodeCover.className = "board-column secret hidden";
+
+  waitIndicatorContainer.className = "bottom-container hidden";
+  nextGameCountdown.className = "bottom-container next-game-countdown hidden";
+  buttoncontainer.className = "bottom-container hidden";
 };
 
-const resetFeedback = () => (feedback = [-1, -1, -1, -1]);
-const resetGuess = () => (guess = [-1, -1, -1, -1]);
-
-const changeActiveColor = (e) => {
-  const audio = new Audio("../audio/click.mp3");
-  audio.play();
-
-  colorPickers[activeColorIdx].classList.remove("active-color");
-  colorPicker = e.target;
-  activeColorIdx = colorPicker.color_idx;
-  console.log(`Selected color: ${colors[activeColorIdx]}`);
-  colorPicker.classList.add("active-color");
+const showFinalScore = () => {
+  showBigBanner(
+    `HERE IS THE FINAL SCORE`,
+    `PLAYER 1: ${scores[0]} | PLAYER 2: ${scores[1]}"`
+  );
 };
 
 const activateColorPickers = () => {
   colorPickers.forEach((colorPicker) => {
     colorPicker.classList.remove("inactive");
+    colorPicker.classList.remove("active-color");
   });
 
   colorPickers[activeColorIdx].classList.add("active-color");
@@ -162,20 +207,10 @@ const deactivateColorPickers = () => {
   });
 };
 
-const changeActiveMarble = (e) => {
-  const audio = new Audio("../audio/click.mp3");
-  audio.play();
-
-  marblePickers[activeMarbleIdx].classList.remove("active-marble-picker");
-  activeMarble = e.target;
-  activeMarbleIdx = activeMarble.marble_idx;
-
-  activeMarble.classList.add("active-marble-picker");
-};
-
 const activateMarblePickers = () => {
   marblePickers.forEach((marblePicker) => {
     marblePicker.classList.remove("inactive");
+    marblePicker.classList.remove("active-marble-picker");
   });
 
   marblePickers[activeMarbleIdx].classList.add("active-marble-picker");
@@ -194,6 +229,78 @@ const deactivateMarblePickers = () => {
 
   marblePickers.forEach((marblePicker) => {
     marblePicker.removeEventListener("click", changeActiveMarble);
+  });
+};
+
+const changeActiveColor = (e) => {
+  const audio = new Audio("../audio/click.mp3");
+  audio.play();
+
+  colorPickers[activeColorIdx].classList.remove("active-color");
+  colorPicker = e.target;
+  activeColorIdx = colorPicker.color_idx;
+  console.log(`Selected color: ${colors[activeColorIdx]}`);
+  colorPicker.classList.add("active-color");
+};
+
+const changeActiveMarble = (e) => {
+  const audio = new Audio("../audio/click.mp3");
+  audio.play();
+
+  marblePickers[activeMarbleIdx].classList.remove("active-marble-picker");
+  activeMarble = e.target;
+  activeMarbleIdx = activeMarble.marble_idx;
+
+  activeMarble.classList.add("active-marble-picker");
+};
+
+const activatePegHoles = (columnIdx) => {
+  boardColumns[columnIdx].classList.add(`active-column-r-${currentRole}`);
+
+  const columnHoles = pegHoles.filter(
+    (pegHole) => pegHole.column_idx === columnIdx
+  );
+
+  columnHoles.forEach((pegHole) => {
+    pegHole.addEventListener("click", updatePegHole);
+  });
+};
+
+const deactivatePegHoles = (columnIdx) => {
+  boardColumns[columnIdx].classList.remove(`active-column-r-${currentRole}`);
+
+  const columnHoles = pegHoles.filter(
+    (pegHole) => pegHole.column_idx === columnIdx
+  );
+
+  columnHoles.forEach((pegHole) => {
+    pegHole.removeEventListener("click", updatePegHole);
+  });
+};
+
+const activateMarbleHoles = (columnIdx) => {
+  boardColumns[columnIdx].classList.add(`active-column-r-${currentRole}`);
+
+  const columnMarbleHoles = marbleHoles.filter(
+    (marbleHole) => marbleHole.column_idx === columnIdx
+  );
+
+  columnMarbleHoles.forEach((marbleHole) => {
+    marbleHole.addEventListener("click", updateMarbleHole);
+    marbleHole.addEventListener("dblclick", clearMarbleHole);
+  });
+};
+
+const deactivateMarbleHoles = (columnIdx) => {
+  boardColumns[columnIdx].classList.remove(`active-column-r-${currentRole}`);
+
+  const columnMarbleHoles = marbleHoles.filter(
+    (marbleHole) => marbleHole.column_idx === columnIdx
+  );
+
+  columnMarbleHoles.forEach((marbleHole) => {
+    marbleHole.removeEventListener("click", updateMarbleHole);
+    marbleHole.removeEventListener("dblclick", clearMarbleHole);
   });
 };
 
@@ -232,56 +339,6 @@ const clearMarbleHole = (e) => {
   feedback[marbleHole.idx % 4] = -1;
 };
 
-const activatePegHoles = (columnIdx) => {
-  boardColumns[columnIdx].classList.add(`active-column-r${role}`);
-
-  const columnHoles = pegHoles.filter(
-    (pegHole) => pegHole.column_idx === columnIdx
-  );
-
-  columnHoles.forEach((pegHole) => {
-    pegHole.addEventListener("click", updatePegHole);
-  });
-};
-
-const deactivatePegHoles = (columnIdx) => {
-  boardColumns[columnIdx].classList.remove(`active-column-r${role}`);
-
-  const columnHoles = pegHoles.filter(
-    (pegHole) => pegHole.column_idx === columnIdx
-  );
-
-  columnHoles.forEach((pegHole) => {
-    pegHole.removeEventListener("click", updatePegHole);
-  });
-};
-
-const activateMarbleHoles = (columnIdx) => {
-  boardColumns[columnIdx].classList.add(`active-column-r${role}`);
-
-  const columnMarbleHoles = marbleHoles.filter(
-    (marbleHole) => marbleHole.column_idx === columnIdx
-  );
-
-  columnMarbleHoles.forEach((marbleHole) => {
-    marbleHole.addEventListener("click", updateMarbleHole);
-    marbleHole.addEventListener("dblclick", clearMarbleHole);
-  });
-};
-
-const deactivateMarbleHoles = (columnIdx) => {
-  boardColumns[columnIdx].classList.remove(`active-column-r${role}`);
-
-  const columnMarbleHoles = marbleHoles.filter(
-    (marbleHole) => marbleHole.column_idx === columnIdx
-  );
-
-  columnMarbleHoles.forEach((marbleHole) => {
-    marbleHole.removeEventListener("click", updateMarbleHole);
-    marbleHole.removeEventListener("dblclick", clearMarbleHole);
-  });
-};
-
 const activateSecretColumn = () => {
   boardColumns[10].classList.add(`secret-active`);
 
@@ -312,16 +369,26 @@ const paintFeedback = (feedback) => {
   });
 };
 
-const showErrormessage = (message) => {
-  errorMessage.innerHTML = message;
-  errorBanner.classList.remove("hide");
-  errorBanner.classList.remove("animate__fadeOut");
-  errorBanner.classList.add("animate__fadeIn");
+const paintSecret = (secret) => {
+  for (const [idx, colorIdx] of secret.entries()) {
+    pegHoles[idx + 40].className = `ball b${colorIdx}`;
+  }
+};
 
-  setTimeout(() => {
-    errorBanner.classList.remove("animate__fadeIn");
-    errorBanner.classList.add("animate__fadeOut");
-  }, 2500);
+const showWaitIndicator = () => {
+  waitIndicatorContainer.classList.remove("hidden");
+};
+
+const hideWaitIndicator = () => {
+  waitIndicatorContainer.classList.add("hidden");
+};
+
+const showButtonContainer = () => {
+  buttoncontainer.classList.remove("hidden");
+};
+
+const hideButtonContainer = () => {
+  buttoncontainer.classList.add("hidden");
 };
 
 const switchActiveIndicator = () => {
@@ -347,54 +414,127 @@ const addOneToScore = () => {
   }
 };
 
-const prepareBoard = () => {
-  secret = [-1, -1, -1, -1];
-  guess = [-1, -1, -1, -1];
-  feedback = [-1, -1, -1, -1];
-
-  gameSpan.innerHTML = String(gameIdx + 1);
-
-  if (role == 2) {
-    // CODE MAKER
-    activateColorPickers();
-    activateSecretColumn();
-    secretCodeColumn.classList.remove("hide");
-
-    buttonFront.innerHTML = "Secret Ready";
-    mainButton.addEventListener("click", notifySecretReady);
-
-    hideWaitMessage();
-  }
-
-  if (role == 1) {
-    // CODE BRAKER
-    secretCodeCover.classList.remove("hide");
-    mainButton.classList.add("hide");
-
-    showWaitMessage("wait_secret");
-  }
-
-  roleSpan1.innerHTML = gameIdx % 2 == 0 ? "(CB)" : "(CM)";
-  roleSpan2.innerHTML = gameIdx % 2 == 0 ? "(CM)" : "(CB)";
-
-  activeSpan1.innerHTML = gameIdx % 2 == 0 ? "" : "*";
-  activeSpan2.innerHTML = gameIdx % 2 == 0 ? "*" : "";
+const startNextGameCountdown = () => {
+  nextGameCountdown.classList.remove("hidden");
+  updateCountdown(5);
 };
 
-const nextGame = () => {
-  resetBoard();
-  gameIdx++;
-  // switch roles
-  role = role == 1 ? 2 : 1;
+const updateCountdown = (n) => {
+  countdown.classList.add("hidden");
+  countdown.innerHTML = n;
+  countdown.classList.remove("hidden");
+  countdown.classList.remove("animate__zoomIn");
+  countdown.classList.add("animate__zoomIn");
 
-  mainButton.removeEventListener("click", nextGame);
-  prepareBoard();
+  if (n >= 2) {
+    setTimeout(() => {
+      updateCountdown(n - 1);
+    }, 1000);
+  } else {
+    setTimeout(() => {
+      nextGame();
+    }, 1000);
+  }
 };
 
-// SOCKET CONFIGURATIONS
+const animateCSS = (node, animation, prefix = "animate__") => {
+  // We create a Promise and return it
+  return new Promise((resolve, reject) => {
+    const animationName = `${prefix}${animation}`;
+
+    node.classList.add("animate__animated", animationName, "animate__faster");
+
+    // When the animation ends, we clean the classes and resolve the Promise
+    function handleAnimationEnd(event) {
+      event.stopPropagation();
+      node.classList.remove(`${prefix}animated`, animationName);
+      resolve("Animation ended");
+    }
+
+    node.addEventListener("animationend", handleAnimationEnd, { once: true });
+  });
+};
+
+const resetFeedback = () => (feedback = [-1, -1, -1, -1]);
+const resetGuess = () => (guess = [-1, -1, -1, -1]);
+
+/*-----------------------------------------------------------------*/
+/* ----------  MODAL, BIG BANNER & ERR MESSAGE CONTROL  ---------- */
+/*-----------------------------------------------------------------*/
+
+/* Modal Screen */
+const modal = document.querySelector(".modal");
+const overlay = document.querySelector(".overlay");
+const btnCloseModal = document.querySelector(".close-modal");
+
+/* Big Banner */
+const bigBanner = document.querySelector("#big-banner");
+const bbGameCounter = document.querySelector("#big-banner-counter");
+const bbRoleLegend = document.querySelector("#big-banner-role-legend");
+
+/* Error banner */
+const errorBanner = document.querySelector("#error-banner");
+const errorMessage = document.querySelector("#error-message");
+
+const showBigBanner = function (mainTitle, secondaryTitle) {
+  return new Promise((resolve, reject) => {
+    bbGameCounter.innerHTML = mainTitle;
+    bbRoleLegend.innerHTML = secondaryTitle;
+
+    overlay.classList.remove("hidden");
+    bigBanner.classList.remove("hidden");
+    animateCSS(bigBanner, "fadeIn").then((message) => {
+      setTimeout(() => {
+        animateCSS(bigBanner, "fadeOut").then((message) => {
+          bigBanner.classList.add("hidden");
+          overlay.classList.add("hidden");
+          resolve("BIG BANNER HIDDEN");
+        });
+      }, 2000);
+    });
+  });
+};
+
+const openModal = function () {
+  document.addEventListener("keydown", handleScapePress);
+  btnCloseModal.addEventListener("click", closeModal);
+  overlay.addEventListener("click", closeModal);
+  modal.classList.remove("hidden");
+  overlay.classList.remove("hidden");
+};
+
+const handleScapePress = (e) => {
+  // console.log(e.key);
+  if (e.key === "Escape" && !modal.classList.contains("hidden")) {
+    closeModal();
+  }
+};
+
+const closeModal = function () {
+  overlay.removeEventListener("click", closeModal);
+  modal.classList.add("hidden");
+  overlay.classList.add("hidden");
+};
+
+const showErrormessage = (message) => {
+  errorMessage.innerHTML = message;
+  errorBanner.classList.remove("hidden");
+  errorBanner.classList.remove("animate__fadeOut");
+  errorBanner.classList.add("animate__fadeIn");
+
+  setTimeout(() => {
+    errorBanner.classList.remove("animate__fadeIn");
+    errorBanner.classList.add("animate__fadeOut");
+  }, 2500);
+};
+
+/*-----------------------------------------------------------------*/
+/* -----------   SOCKET CONFIGURATIONS AND CONTROL   ------------- */
+/*-----------------------------------------------------------------*/
+
 const socket = io();
 
-// GENERAL CONFIGURATIONS (BOTH SIDES)
+/* General Configurations (BOTH SIDES) */
 socket.on("connect", () => {
   console.log("Connected to server!!");
   // connectionLabel.innerText = "Connected!!";
@@ -425,7 +565,6 @@ socket.on("test-emit", (payload) => {
 });
 
 // CODE-MAKER SIDE CONTROL
-
 socket.on("peg-hole-update", (payload) => {
   const { pegHoleIdx, activeColorIdx } = payload;
   pegHoles[pegHoleIdx].className = `ball b${activeColorIdx}`;
@@ -443,13 +582,13 @@ socket.on("feedback-request", ({ sessionId, activeColumnIdx }) => {
   activateMarbleHoles(activeColumnIdx);
 
   buttonFront.innerHTML = "Send Feedback";
-
-  hideWaitMessage();
-
-  mainButton.classList.remove("hide");
+  mainButton.classList.remove("hidden");
   mainButton.addEventListener("click", sendFeedback);
 
   resetFeedback();
+
+  hideWaitIndicator();
+  showButtonContainer();
 });
 
 const updateSecret = (e) => {
@@ -487,10 +626,11 @@ const notifySecretReady = (e) => {
 
   setTimeout(() => {
     // reset mainButton
-    mainButton.classList.add("hide");
+    mainButton.classList.add("hidden");
     mainButton.removeEventListener("click", notifySecretReady);
 
-    showWaitMessage("wait_guess");
+    hideButtonContainer();
+    showWaitIndicator();
   }, 100);
 
   activeColumnIdx = 0;
@@ -502,37 +642,76 @@ const sendFeedback = () => {
     return total + (marble_value == -1 ? 0 : marble_value);
   }, 0);
 
-  switchActiveIndicator();
-
   const audio = new Audio("../audio/click.mp3");
   audio.play();
 
-  console.log(feedBackSum);
-  console.log("sending feedback: ", feedback);
-  socket.emit("feedback-response", { sessionId, feedback });
-
-  const lastActiveColumnIdx = activeColumnIdx;
-  activeColumnIdx++;
-
-  deactivateMarblePickers();
-  deactivateMarbleHoles(lastActiveColumnIdx);
-  activateMarbleHoles(activeColumnIdx);
+  socket.emit("feedback-response", { sessionId, feedback, secret });
 
   if (feedBackSum < 4) {
     addOneToScore();
-    setTimeout(() => {
+    // are there more guesses available?
+    if (activeColumnIdx < 9) {
+      // there are still more guesses
+      switchActiveIndicator();
+
+      const lastActiveColumnIdx = activeColumnIdx;
+      activeColumnIdx++;
+
+      setTimeout(() => {
+        deactivateMarblePickers();
+        deactivateMarbleHoles(lastActiveColumnIdx);
+        activateMarbleHoles(activeColumnIdx);
+
+        mainButton.removeEventListener("click", sendFeedback);
+        hideButtonContainer();
+
+        showWaitIndicator();
+      }, 100);
+    } else if (activeColumnIdx === 9) {
+      // The ten guesses were used
       mainButton.removeEventListener("click", sendFeedback);
-      mainButton.classList.add("hide");
+      hideButtonContainer();
 
-      showWaitMessage("wait_guess");
-    }, 100);
+      showBigBanner(`CODE BROKEN`, `Launching next game...`).then((message) =>
+        startNextGameCountdown()
+      );
+      // are there more games to play?
+      if (gameIdx < nGames - 1) {
+        // there are still games to play
+        showBigBanner(
+          `GREAT!!! YOUR CODE WENT ALL THE GAME SECRET.`,
+          `Launching next game...`
+        ).then((message) => startNextGameCountdown());
+      } else if (gameIdx == nGames - 1) {
+        // the match is over
+        showBigBanner(
+          `GREAT!!! YOUR CODE WENT ALL THE GAME SECRET.`,
+          `The match is over, and we have a ${
+            scores[0] == scores[1] ? "draw" : "winner."
+          }`
+        ).then((message) => showFinalScore());
+      }
+    }
   } else if (feedBackSum === 4) {
-    showErrormessage("Urray!!! You brake the secret code...");
-
     mainButton.removeEventListener("click", sendFeedback);
-    buttonFront.innerHTML = "Start next game.";
-    mainButton.addEventListener("click", nextGame);
-    mainButton.classList.remove("hide");
+    hideButtonContainer();
+
+    // are there more games to play?
+    if (gameIdx < nGames - 1) {
+      // there are still games to play
+      showBigBanner(
+        `CRAPS!!! YOUR CODE HAS BEEN DISCOVERED`,
+        `Launching next game...`
+      ).then((message) => startNextGameCountdown());
+    } else if (gameIdx == nGames - 1) {
+      // the match is over
+      showBigBanner(
+        `CRAPS!!! YOUR CODE HAS BEEN DISCOVERED`,
+        `The match is over, and we have a ${
+          scores[0] == scores[1] ? "draw" : "winner."
+        }`
+      ).then((message) => showFinalScore());
+    }
   }
 };
 
@@ -551,50 +730,93 @@ socket.on("secret-ready", (payload) => {
   activateColorPickers();
   activatePegHoles(0);
 
-  hideWaitMessage();
-
   buttonFront.innerHTML = "Request Feedback";
-  mainButton.classList.remove("hide");
   mainButton.addEventListener("click", requestFeedback);
+
+  hideWaitIndicator();
+  showButtonContainer();
 });
 
-socket.on("feedback-response", ({ sessionId, feedback }) => {
-  switchActiveIndicator();
-
+socket.on("feedback-response", ({ sessionId, feedback, secret }) => {
   const audio = new Audio("../audio/new-ticket.mp3");
   audio.play();
 
-  console.log("feedback response ready:");
-  console.log({ sessionId, feedback });
+  paintFeedback(feedback);
+  hideWaitIndicator();
 
   const feedBackSum = feedback.reduce((total, marble_value) => {
     return total + (marble_value == -1 ? 0 : marble_value);
   }, 0);
 
-  console.log("fs:", feedBackSum);
-
-  paintFeedback(feedback);
-  hideWaitMessage();
-
   if (feedBackSum < 4) {
+    // the code is still unbroken
     addOneToScore();
-    const lastActiveColumnIdx = activeColumnIdx;
-    activeColumnIdx++;
 
-    deactivatePegHoles(lastActiveColumnIdx);
-    activatePegHoles(activeColumnIdx);
+    // are there more guesses available?
+    if (activeColumnIdx < 9) {
+      // still have guesses
+      switchActiveIndicator();
 
-    mainButton.classList.remove("hide");
-    mainButton.addEventListener("click", requestFeedback);
-  } else {
-    showErrormessage("Code broken... Get ready for a new game.");
+      const lastActiveColumnIdx = activeColumnIdx;
+      activeColumnIdx++;
 
-    secretCodeCover.classList.add("hide");
-    secretCodeColumn.classList.remove("hide");
+      deactivatePegHoles(lastActiveColumnIdx);
+      activatePegHoles(activeColumnIdx);
 
-    buttonFront.innerHTML = "Start next game.";
-    mainButton.addEventListener("click", nextGame);
-    mainButton.classList.remove("hide");
+      mainButton.addEventListener("click", requestFeedback);
+      showButtonContainer();
+    } else {
+      // The ten guesses were used
+      mainButton.removeEventListener("click", sendFeedback);
+      hideButtonContainer();
+
+      // show the secret code
+      paintSecret(secret);
+      secretCodeCover.classList.add("hidden");
+      secretCodeColumn.classList.remove("hidden");
+
+      // are there more games to play?
+      if (gameIdx < nGames - 1) {
+        // there are still games to play
+        showBigBanner(
+          `You used your ten guesses =(`,
+          `Launching next game...`
+        ).then((message) => startNextGameCountdown());
+      } else if (gameIdx == nGames - 1) {
+        // the match is over
+        showBigBanner(
+          `You used your ten guesses =(`,
+          `The match is over, and we have a ${
+            scores[0] == scores[1] ? "draw" : "winner."
+          }`
+        ).then((message) => showFinalScore());
+      }
+    }
+  } else if (feedBackSum === 4) {
+    // the code is broken
+    paintSecret(secret);
+    mainButton.removeEventListener("click", sendFeedback);
+    hideButtonContainer();
+
+    secretCodeCover.classList.add("hidden");
+    secretCodeColumn.classList.remove("hidden");
+
+    // are there more games to play?
+    if (gameIdx < nGames - 1) {
+      // there are still games to play
+      showBigBanner(
+        `WELL DONE!!! YOU BROKE THE CODE.`,
+        `Launching next game...`
+      ).then((message) => startNextGameCountdown());
+    } else if (gameIdx == nGames - 1) {
+      // the match is over
+      showBigBanner(
+        `WELL DONE!!! YOU BROKE THE CODE.`,
+        `The match is over, and we have a ${
+          scores[0] == scores[1] ? "draw" : "winner."
+        }`
+      ).then((message) => showFinalScore());
+    }
   }
 });
 
@@ -632,53 +854,16 @@ const requestFeedback = () => {
   resetGuess();
 
   // reset mainButton (remove eventListener should be last)
-  mainButton.classList.add("hide");
   mainButton.removeEventListener("click", requestFeedback);
-
-  showWaitMessage("wait_feedback");
+  hideButtonContainer();
 };
 
-const showWaitMessage = (messageType) => {
-  //waitMessageDiv.innerHTML = wait_messages[messageType];
-  waitMessageContainer.classList.remove("hide");
-};
-
-const hideWaitMessage = () => {
-  waitMessageContainer.classList.add("hide");
-};
-
-/* MODAL CONTROL */
-const modal = document.querySelector(".modal");
-const overlay = document.querySelector(".overlay");
-const btnCloseModal = document.querySelector(".close-modal");
-const firstGameLegend = document.querySelector("#first-game-legend");
-
-const legendPlayer1 =
-  "On the first game you play CODEBRAKER and your friend plays CODEMAKER.";
-const legendPlayer2 =
-  "On the first game you play CODEMAKER and your friend plays CODEBRAKER.";
-firstGameLegend.innerHTML = role == 1 ? legendPlayer1 : legendPlayer2;
-
-const openModal = function () {
-  modal.classList.remove("hidden");
-  overlay.classList.remove("hidden");
-};
-
-const closeModal = function () {
-  modal.classList.add("hidden");
-  overlay.classList.add("hidden");
-};
-
-btnCloseModal.addEventListener("click", closeModal);
-overlay.addEventListener("click", closeModal);
-
-document.addEventListener("keydown", function (e) {
-  // console.log(e.key);
-  if (e.key === "Escape" && !modal.classList.contains("hidden")) {
-    closeModal();
-  }
-});
-
-/* Initial settings */
+/*-----------------------------------------------------------------*/
+/* ---------------------   INITIAL SETTINGS  --------------------- */
+/*-----------------------------------------------------------------*/
+initializeElements();
 prepareBoard();
-openModal();
+showBigBanner(
+  `GAME ${gameIdx + 1}/${nGames}`,
+  `You play ${(playerId + gameIdx) % 2 == 0 ? "CODEMAKER" : "CODEBRAKER"}`
+);
