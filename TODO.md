@@ -1,6 +1,8 @@
 - jwt for authorization
 - winner and loser
-- solo game
 - controls (sound control)
 - eliminar logs en server
-- save initial roles on JWT
+- ordenar assets
+- proteger rutas
+- cambiar favico
+- fonts in game screens
