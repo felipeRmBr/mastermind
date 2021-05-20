@@ -11,13 +11,13 @@ class BotPlayer {
 
   giveFeedback(secret, guess) {
     // check for exact matches
-    exactMatchesCount = 0;
+    let exactMatchesCount = 0;
 
     // we use secretLeft and guessLeft to
     // track the entries that dont have a exact match
-    secretLeft = [];
-    guessLeft = [];
-    for (idx = 0; idx < secret.length; idx++) {
+    let secretLeft = [];
+    let guessLeft = [];
+    for (let idx = 0; idx < secret.length; idx++) {
       if (secret[idx] === guess[idx]) {
         exactMatchesCount++;
       } else {
@@ -30,15 +30,23 @@ class BotPlayer {
     let partialMatchesCount = 0;
 
     while (guessLeft.length) {
-      let guessToCheck = guessLeft.shift();
+      let marbleToCheck = guessLeft.shift();
 
-      if (secretLeft.includes(guessToCheck)) {
+      if (secretLeft.includes(marbleToCheck)) {
         partialMatchesCount++;
-        secretLeft.splice(secretLeft.indexOf(guessToCheck), 1);
+        secretLeft.splice(secretLeft.indexOf(marbleToCheck), 1);
       }
     }
 
-    return [exactMatchesCount, partialMatchesCount];
+    let feedbackArray = [];
+    for (let i = 0; i < exactMatchesCount; i++) {
+      feedbackArray.unshift(1);
+    }
+
+    for (let i = 0; i < partialMatchesCount; i++) {
+      feedbackArray.unshift(0);
+    }
+    return feedbackArray;
   }
 }
 

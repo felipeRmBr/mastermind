@@ -3,7 +3,6 @@ class Game {
     this.secret = [0, 0, 0, 0];
     this.guesses = []; // array of arrays
     this.feedbacks = []; // for multiplayer mode
-    this.timeLeft = 300; // second left
   }
 
   setSecret(secret) {
@@ -14,43 +13,32 @@ class Game {
     this.guesses.push(guess);
   }
 
-  addFeedBack(feedback) {
+  addFeedback(feedback) {
     this.feedbacks.push(feedback);
-  }
-
-  updateTimeLeft(seconds) {
-    this.timeLeft = seconds;
   }
 }
 
 class GameSession {
-  constructor(id, players, mode) {
+  constructor(sessionPin, players, nGames) {
     /*
         id -> str, session id;
         players -> array[str] of users ids;
-        mode -> str, "race" (against the clock), "chill" (unlimited time)
-        */
+        mode -> str, "single-player" (against the clock), "multi-player" (unlimited time)
+    */
 
-    this.id = id;
+    this.sessionPin = sessionPin;
     this.players = players;
+    this.nGames = nGames;
+    this.scores = [0, 0];
     this.codeMaker = -1;
     this.codeCracker = -1;
 
-    // All the games will be played on the same mode
-    this.mode = mode;
-    this.multiplayer = players.length > 1 ? true : false;
-
-    this.record = initRecord(players);
     this.game = new Game();
   }
 
-  initRecord(players) {
-    let record = {};
-    players.forEach((player) => {
-      record[player] = 0;
-    });
-
-    return record;
+  updateScore(palyerIdx, points) {
+    // we only want to track the number of cracked codes
+    this.scores[palyerIdx] += points;
   }
 
   resetGame() {
@@ -64,13 +52,6 @@ class GameSession {
 
   switchRoles() {
     [this.codeMaker, this.codeCracker] = [this.codeCracker, this.codeMaker];
-  }
-
-  updateRecord(winner) {
-    // we only want to track the number of cracked codes
-    if (winner == "code-cracker") {
-      this.record[this.codeCracker++];
-    }
   }
 
   saveGame() {
