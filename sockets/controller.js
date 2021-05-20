@@ -1,5 +1,6 @@
 const { Socket } = require("socket.io");
 const GameSession = require("../models/game-session");
+const BotPlayer = require("../models/bot_player");
 
 let sessionIds = [];
 let gameSessions = {};
@@ -13,6 +14,8 @@ const getNewSessionPin = () => {
   return newSessionPin;
 };
 
+const botPlayer = new BotPlayer();
+
 const socketController = (socket, io) => {
   console.log("new connection");
   // Cuando un cliente se conecta
@@ -20,6 +23,9 @@ const socketController = (socket, io) => {
   // socket.emit("estado-actual", ticketControl.ultimos4);
   // socket.emit("tickets-pendientes", ticketControl.tickets.length);
 
+  /*-----------------------------------------------------------------*/
+  /* ------------------   MULTIPLAYER CONTROL   -------------------- */
+  /*-----------------------------------------------------------------*/
   socket.on("code-request", ({ username }, callback) => {
     const newSessionPin = getNewSessionPin();
     sessionIds.push(newSessionPin);
@@ -86,44 +92,130 @@ const socketController = (socket, io) => {
     //socket.to(payload.sessionId).emit("feedback-response", payload);
   });
 
-  // socket.on("siguiente-ticket", (payload, callback) => {
-  //   const siguiente = ticketControl.siguiente();
-  //   callback(siguiente);
-  //   socket.broadcast.emit("tickets-pendientes", ticketControl.tickets.length);
-  // });
+  /*-----------------------------------------------------------------*/
+  /* -----------------   SINGLE PLAYER CONTROL   ------------------- */
+  /*-----------------------------------------------------------------*/
 
-  // socket.on("siguiente-ticket", (payload, callback) => {
-  //   const siguiente = ticketControl.siguiente();
-  //   callback(siguiente);
-  //   socket.broadcast.emit("tickets-pendientes", ticketControl.tickets.length);
-  // });
+  const getCurrentGameData = (sessionId) => {
+    const game = gameSessions[sessionId].game;
+    return [game, game.secret];
+  };
 
-  // socket.on("atender-ticket", ({ escritorio }, callback) => {
-  //   if (!escritorio) {
-  //     return callback({
-  //       ok: false,
-  //       msg: "Es escritorio es obligatorio",
-  //     });
-  //   }
+  const computeFeedback = (secret, guess) => {
+    const feedback = botPlayer.giveFeedback(secret, guess);
+    const feedbackSum = feedback.reduce((total, marble_value) => {
+      return total + (marble_value == -1 ? 0 : marble_value);
+    }, 0);
 
-  //   const ticket = ticketControl.atenderTicket(escritorio);
+    return [feedback, feedbackSum];
+  };
 
-  //   socket.broadcast.emit("estado-actual", ticketControl.ultimos4);
-  //   socket.emit("tickets-pendientes", ticketControl.tickets.length);
-  //   socket.broadcast.emit("tickets-pendientes", ticketControl.tickets.length);
+  const updateGameData = (game, guess, feedback) => {
+    game.addGuess(guess);
+    game.addFeedback(feedback);
+  };
 
-  //   if (!ticket) {
-  //     callback({
-  //       ok: false,
-  //       msg: "Ya no hay tickets pendientes",
-  //     });
-  //   } else {
-  //     callback({
-  //       ok: true,
-  //       ticket,
-  //     });
-  //   }
-  // });
+  const resetGame = (sessionId) => {
+    // Reset game
+    gameSession = gameSessions[sessionId];
+    gameSession.resetGame();
+
+    const newSecret = botPlayer.generateSecret();
+    gameSession.game.setSecret(newSecret);
+
+    console.log("Game reset, new secret:", newSecret);
+  };
+
+  socket.on("new-single-game", ({ username, nGames }, callback) => {
+    const newSessionPin = getNewSessionPin();
+    sessionIds.push(newSessionPin);
+
+    const gameSession = new GameSession(newSessionPin, [username], nGames);
+    gameSession.game.setSecret(botPlayer.generateSecret());
+
+    gameSessions[newSessionPin] = gameSession;
+
+    console.log(
+      `New single player game. Username: ${username}; 
+      Session pin: ${newSessionPin}; 
+      secret ${gameSession.game.secret};
+      nGames ${gameSession.nGames}`
+    );
+
+    callback({ ok: true, newCode: newSessionPin });
+  });
+
+  socket.on("first-contact", ({ sessionId }, callback) => {
+    const gameSession = gameSessions[sessionId];
+    if (gameSession) {
+      callback({ ok: true, nGamesResponse: gameSession.nGames });
+    } else {
+      console.log("session not found");
+      callback({ ok: false });
+    }
+  });
+
+  socket.on("check-secret-ready", ({ sessionId }, callback) => {
+    const gameSecret = gameSessions[sessionId].game.secret;
+    if (gameSecret) {
+      console.log("Secret ready:", gameSecret);
+      socket.emit("secret-ready", { sessionId });
+      callback({ ok: true });
+    } else {
+      console.log("Secret undefined");
+      callback({ ok: false });
+    }
+  });
+
+  socket.on("peg-hole-update-single", (payload, callback) => {
+    const { sessionId, pegHoleIdx, activeColorIdx } = payload;
+
+    //gameSecret = gameSessions[sessionId].game.secret;
+
+    callback({ ok: true });
+  });
+
+  socket.on("feedback-request-single", (payload) => {
+    console.log("feedback request arrived");
+    const { sessionId, guess, activeColumnIdx } = payload;
+
+    const [game, gameSecret] = getCurrentGameData(sessionId);
+    const [feedback, feedbackSum] = computeFeedback(gameSecret, guess);
+    updateGameData(game, guess, feedback);
+
+    const codeBroken = feedbackSum == 4;
+
+    if (codeBroken) {
+      // send feedback
+      console.log("code boroken");
+      socket.emit("feedback-response", {
+        feedback,
+        secret: gameSecret,
+        score: 5 - Math.max(0, activeColumnIdx - 5),
+      });
+
+      resetGame(sessionId);
+    } else {
+      if (activeColumnIdx < 9) {
+        // there are more guesses
+        socket.emit("feedback-response", {
+          feedback,
+          secret: [],
+          score: 0,
+        });
+      } else {
+        // 10 guesses were used
+        console.log("10 guesees were used");
+        socket.emit("feedback-response", {
+          feedback,
+          secret: gameSecret,
+          score: 0,
+        });
+
+        resetGame(sessionId);
+      }
+    }
+  });
 };
 
 module.exports = {
