@@ -93,7 +93,14 @@ h3 {
   color: white;
   font-size: 2.5rem;
   text-align: center;
+}
+
+.heavy {
   font-weight: bold;
+}
+
+.light {
+  font-weight: 100;
 }
 
 .timer {
@@ -463,7 +470,7 @@ h3 {
 }
 
 .red {
-  background-color: red;
+  background-color: #fd4040;
 }
 
 .white {
@@ -531,7 +538,7 @@ h3 {
   background-color: #feefb3;
 }
 .isa_error {
-  color: #d8000c;
+  color: #ec444c;
   background-color: #ffd2d2;
 }
 
