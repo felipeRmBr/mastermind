@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>MASTERMIND</title>
+
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- favicon -->
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./favicon/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./favicon/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="./favicon/favicon-16x16.png"
+    />
+
+    <!-- style sheet -->
+    <link rel="stylesheet" href="./css/landing_styles.css" />
+    <link rel="stylesheet" href="./css/push-button.css" />
+
+    <!-- font awesome -->
+    <link rel="stylesheet" href="./font-awesome/css/font-awesome.min.css" />
+  </head>
+
+  <body class="entry-point">
+    <!-- 'enter-session' container -->
+    <div class="container" id="enter-session-container">
+      <div class="form-container">
+        <!-- <div class="small-span">Enter a user name</div> -->
+
+        <!-- <input class="name-input" type="text" placeholder="" /> -->
+        <h2 class="mastermind-title">MASTERMIND</h2>
+        <label for="fname" class="input-label"> Select a user-name </label>
+        <input
+          type="text"
+          id="username-input"
+          name="firstname"
+          placeholder="your username"
+          autocomplete="off"
+          class="form-input"
+        />
+
+        <label for="fpin" class="input-label"> Enter the session code </label>
+        <input
+          type="text"
+          id="session-pin-input"
+          name="firstname"
+          placeholder="------"
+          autocomplete="off"
+          class="form-input big-margin-bottom"
+        />
+
+        <!-- <button type="submit" class="kahoot-button">Continue</button> -->
+
+        <button class="pushable" id="enter-session-button">
+          <span class="shadow"></span>
+          <span class="edge"></span>
+          <span class="front"> Continue </span>
+        </button>
+      </div>
+    </div>
+
+    <div class="isa_error animate__animated hide" id="error-banner">
+      <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+      <span id="error-message">"SOME ERROR"</span>
+    </div>
+
+    <script src="./socket.io/socket.io.js"></script>
+    <script src="./js/enter-session.js"></script>
+
+    <!-- animate css -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+
+    <!-- font awesome -->
+    <link rel="stylesheet" href="./font-awesome/css/font-awesome.min.css" />
+  </body>
+</html>

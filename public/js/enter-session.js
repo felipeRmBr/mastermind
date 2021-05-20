@@ -5,20 +5,28 @@ const enterSessionButton = document.querySelector("#enter-session-button");
 const errorBanner = document.querySelector("#error-banner");
 const errorMessage = document.querySelector("#error-message");
 
-const usernameAndPinContainer = document.querySelector(
-  "#enter-session-container"
-);
+const socket = io();
+
+socket.on("connect", () => {
+  console.log("Connected to server!!");
+  // connectionLabel.innerText = "Connected!!";
+});
+
+socket.on("disconnect", () => {
+  console.log("Server disconnected =(");
+  // connectionLabel.innerText = "Disconnected!!";
+});
 
 const showErrormessage = (message) => {
   errorMessage.innerHTML = message;
-  errorBanner.classList.remove("hide");
+  errorBanner.classList.remove("hidden");
   errorBanner.classList.remove("animate__fadeOut");
   errorBanner.classList.add("animate__fadeIn");
 
   setTimeout(() => {
     errorBanner.classList.remove("animate__fadeIn");
     errorBanner.classList.add("animate__fadeOut");
-  }, 2500);
+  }, 3000);
 };
 
 const catchUsernameEnter = (e) => {
@@ -57,22 +65,9 @@ const sentSessionPin = () => {
       sessionPinInput.value = "";
       return;
     }
-
     window.location = `game.html?session=${pin}&player=2`;
   });
 };
-
-const socket = io();
-
-socket.on("connect", () => {
-  console.log("Connected to server!!");
-  // connectionLabel.innerText = "Connected!!";
-});
-
-socket.on("disconnect", () => {
-  console.log("Server disconnected =(");
-  // connectionLabel.innerText = "Disconnected!!";
-});
 
 usernameInput.addEventListener("keypress", catchUsernameEnter);
 sessionPinInput.addEventListener("keypress", catchPinEnter);

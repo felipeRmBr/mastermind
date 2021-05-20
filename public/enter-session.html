@@ -1,86 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>MASTERMIND</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mastermind</title>
 
-    <!-- google fonts -->
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Bootstrap core CSS -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet" />
 
-    <!-- favicon -->
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="./favicon/apple-touch-icon.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="./favicon/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="./favicon/favicon-16x16.png"
-    />
+    <!--     <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
 
-    <!-- style sheet -->
-    <link rel="stylesheet" href="./css/landing_styles.css" />
-    <link rel="stylesheet" href="./css/push-button.css" />
-
-    <!-- font awesome -->
-    <link rel="stylesheet" href="./font-awesome/css/font-awesome.min.css" />
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+ -->
+    <!-- Custom styles for this template -->
+    <link href="./css/signin.css" rel="stylesheet" />
   </head>
 
-  <body class="entry-point">
-    <!-- 'enter-session' container -->
-    <div class="container" id="enter-session-container">
-      <div class="form-container">
-        <!-- <div class="small-span">Enter a user name</div> -->
+  <body class="text-center">
+    <main class="landing-form">
+      <form>
+        <img class="mb-4" src="./M3.svg" alt="" width="250" height="63" />
+        <h6 class="h6 mb-3 fw-normal">
+          Pick a username <br />& enter the session PIN
+        </h6>
 
-        <!-- <input class="name-input" type="text" placeholder="" /> -->
-        <h2 class="mastermind-title">MASTERMIND</h2>
-        <label for="fname" class="input-label"> Select a user-name </label>
-        <input
-          type="text"
-          id="username-input"
-          name="firstname"
-          placeholder="your username"
-          autocomplete="off"
-          class="form-input"
-        />
+        <div class="form-floating">
+          <input
+            type="text"
+            class="form-control rounded mb-1"
+            id="username-input"
+            placeholder="username"
+          />
+          <label for="username-input">Your username</label>
+        </div>
 
-        <label for="fpin" class="input-label"> Enter the session code </label>
-        <input
-          type="text"
-          id="session-pin-input"
-          name="firstname"
-          placeholder="------"
-          autocomplete="off"
-          class="form-input big-margin-bottom"
-        />
+        <div class="form-floating">
+          <input
+            type="number"
+            class="form-control rounded mb-3"
+            id="session-pin-input"
+            placeholder="0000"
+            minlength="4"
+          />
+          <label for="session-pin-input">Session PIN</label>
+        </div>
 
-        <!-- <button type="submit" class="kahoot-button">Continue</button> -->
-
-        <button class="pushable" id="enter-session-button">
-          <span class="shadow"></span>
-          <span class="edge"></span>
-          <span class="front"> Continue </span>
+        <button
+          class="w-100 btn btn-md btn-primary"
+          id="enter-session-button"
+          type="button"
+        >
+          Continue
         </button>
-      </div>
-    </div>
 
-    <div class="isa_error animate__animated hide" id="error-banner">
+        <p class="mt-5 mb-3 text-muted">
+          coded with
+          <span style="color: #e25555">&#9829;</span>
+          by
+          <a href="https://github.com/felipeRmBr" class="text-reset"
+            >felipe-rb</a
+          >
+        </p>
+      </form>
+    </main>
+
+    <div class="isa_error animate__animated hidden" id="error-banner">
       <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-      <span id="error-message">"SOME ERROR"</span>
+      <span id="error-message">Invalid session pin</span>
     </div>
 
     <script src="./socket.io/socket.io.js"></script>
@@ -91,5 +89,8 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
     />
+
+    <!-- font awesome -->
+    <link rel="stylesheet" href="./font-awesome/css/font-awesome.min.css" />
   </body>
 </html>
