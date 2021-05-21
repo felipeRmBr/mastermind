@@ -65,7 +65,7 @@ const sentSessionPin = () => {
       sessionPinInput.value = "";
       return;
     }
-    window.location = `game.html?session=${pin}&player=2`;
+    window.location = `multiplayer-game.html?session=${pin}&player=2`;
   });
 };
 

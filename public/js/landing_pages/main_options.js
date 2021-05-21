@@ -3,7 +3,7 @@ const multiPlayerButton = document.querySelector("#multi-player-button");
 const aboutButton = document.querySelector("#about-button");
 
 singlePlayerButton.addEventListener("click", () => {
-  window.location = `new-single-game.html`;
+  window.location = `single-player-prepare.html`;
 });
 
 multiPlayerButton.addEventListener("click", () => {

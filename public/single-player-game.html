@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>MASTERMIND</title>
+    <title>Mastermind</title>
 
     <!-- style sheet -->
     <link rel="stylesheet" href="./css/game_styles.css" />
@@ -13,595 +13,598 @@
     <link rel="stylesheet" href="./css/loading.css" />
 
     <!-- google fonts -->
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap"
-      rel="stylesheet"
-    />
 
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap"
       rel="stylesheet"
     />
-
-    <style>
-      @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
-    </style>
 
     <!-- font awesome -->
-    <link rel="stylesheet" href="./font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="./css/font-awesome/css/font-awesome.min.css" />
   </head>
 
   <body>
-    <div class="top-container">
-      <div class="timer">
-        <span id="game-span"></span>
-      </div>
-      <div class="title-container">
-        <div class="head-title">
-          <span class="heavy">MASTER</span><span class="light">MIND</span>
+    <div class="main-container">
+      <div class="top-container">
+        <div class="game-counter">
+          <span id="game-span"></span>
         </div>
-      </div>
-      <!-- <div class="timer">&#9201 09:45</div> -->
-      <div class="usernames-container">
-        <div class="username">
-          <span id="active-span-1"></span>
-          <span id="username-1"></span>
-          <span id="role-user-1"></span>
-          <span id="score-1"></span>
-        </div>
-        <div class="username">
-          <span id="active-span-2"></span>
-          <span id="username-2"></span>
-          <span id="role-user-2"></span>
-          <span id="score-2"></span>
-        </div>
-      </div>
-    </div>
-
-    <div class="board">
-      <div class="colors-bar">
-        <div class="column-item">
-          <div class="color-picker color-0 active-color"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="color-picker color-1 inactive"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="color-picker color-2 inactive"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="color-picker color-3 inactive"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="color-picker color-4 inactive"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="color-picker color-5 inactive"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="marble-picker-container">
-            <div class="marble-picker white inactive"></div>
+        <div class="title-container">
+          <div class="head-title">
+            <span class="heavy">MASTER</span><span class="light">MIND</span>
           </div>
-
-          <div class="marble-picker-container">
-            <div class="marble-picker red inactive"></div>
+        </div>
+        <!-- <div class="timer">&#9201 09:45</div> -->
+        <div class="usernames-container">
+          <div class="username">
+            <span id="active-span-1"></span>
+            <span id="username-1"></span>
+            <span id="role-user-1"></span>
+            <span id="score-1"></span>
+          </div>
+          <div class="username">
+            <span id="active-span-2"></span>
+            <span id="username-2"></span>
+            <span id="role-user-2"></span>
+            <span id="score-2"></span>
           </div>
         </div>
       </div>
 
-      <div class="board-column">
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
+      <div class="board">
+        <div class="colors-bar">
+          <div class="column-item">
+            <div class="color-picker color-0 active-color"></div>
+          </div>
 
-          <div class="hole shade2"></div>
+          <div class="column-item">
+            <div class="color-picker color-1 inactive"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="color-picker color-2 inactive"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="color-picker color-3 inactive"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="color-picker color-4 inactive"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="color-picker color-5 inactive"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="marble-picker-container">
+              <div class="marble-picker white inactive"></div>
+            </div>
+
+            <div class="marble-picker-container">
+              <div class="marble-picker red inactive"></div>
+            </div>
+          </div>
         </div>
 
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
+        <div class="board-column">
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
 
-          <div class="hole shade2"></div>
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="small-container">
+              <div class="marble-hole top-lef"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole top-right"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole bottom-left"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole bottom-right"></div>
+            </div>
+          </div>
         </div>
 
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
+        <div class="board-column">
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
 
-          <div class="hole shade2"></div>
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="small-container">
+              <div class="marble-hole top-lef"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole top-right"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole bottom-left"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole bottom-right"></div>
+            </div>
+          </div>
         </div>
 
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
+        <div class="board-column">
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
 
-          <div class="hole shade2"></div>
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="small-container">
+              <div class="marble-hole top-lef"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole top-right"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole bottom-left"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole bottom-right"></div>
+            </div>
+          </div>
         </div>
 
-        <div class="column-item">
-          <div class="small-container">
-            <div class="marble-hole top-lef"></div>
+        <div class="board-column">
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
           </div>
-          <div class="small-container">
-            <div class="marble-hole top-right"></div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
           </div>
-          <div class="small-container">
-            <div class="marble-hole bottom-left"></div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
           </div>
-          <div class="small-container">
-            <div class="marble-hole bottom-right"></div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
           </div>
+
+          <div class="column-item">
+            <div class="small-container">
+              <div class="marble-hole top-lef"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole top-right"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole bottom-left"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole bottom-right"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="board-column">
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="small-container">
+              <div class="marble-hole top-lef"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole top-right"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole bottom-left"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole bottom-right"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="board-column">
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="small-container">
+              <div class="marble-hole top-lef"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole top-right"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole bottom-left"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole bottom-right"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="board-column">
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="small-container">
+              <div class="marble-hole top-lef"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole top-right"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole bottom-left"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole bottom-right"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="board-column">
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="small-container">
+              <div class="marble-hole top-lef"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole top-right"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole bottom-left"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole bottom-right"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="board-column">
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="small-container">
+              <div class="marble-hole top-lef"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole top-right"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole bottom-left"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole bottom-right"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="board-column">
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="small-container">
+              <div class="marble-hole top-lef"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole top-right"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole bottom-left"></div>
+            </div>
+            <div class="small-container">
+              <div class="marble-hole bottom-right"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="board-column secret on-focus hidden" id="secret-code">
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item">
+            <div class="hole-border shade1"></div>
+
+            <div class="hole shade2"></div>
+          </div>
+
+          <div class="column-item"></div>
+        </div>
+
+        <div class="board-column secret hidden" id="secret-cover">
+          <div class="cover-top"></div>
         </div>
       </div>
 
-      <div class="board-column">
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
+      <div class="bottom-container hidden" id="button-container">
+        <button class="pushable" id="main-button">
+          <span class="shadow"></span>
+          <span class="edge"></span>
+          <span class="front" id="button-front"> Push Me </span>
+        </button>
+      </div>
 
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="small-container">
-            <div class="marble-hole top-lef"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole top-right"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole bottom-left"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole bottom-right"></div>
-          </div>
+      <div class="bottom-container hidden" id="wait-indicator-container">
+        <div class="lds-ellipsis" id="wait-spinner">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
       </div>
 
-      <div class="board-column">
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
+      <div
+        class="bottom-container next-game-countdown hidden"
+        id="next-game-countdown"
+      >
+        <span class="small-font">Next game will start in:</span>
+        <span
+          class="large-font animate__animated animate__faster"
+          id="countdown"
+        >
+          5
+        </span>
+      </div>
 
-          <div class="hole shade2"></div>
-        </div>
+      <div class="modal hidden">
+        <button class="close-modal">&times;</button>
+        <h2>Welcome to MASTERMIND ❗❗❗</h2>
+        <p>
+          This will be a six games match. At every game there will be two
+          alternating roles, a CODEMAKER and a CODEBRAKER. The
+          <i>codemaker</i> will choose a secret code and the
+          <i>codebraker</i> will have up to 10 guesses to brake it. The
+          <i>codemaker</i> wins one point for every wrong guess made by the
+          <i>codebraker</i>, and gets one extra point if the
+          <i>codebraker</i> fails to brake the code after the 10 guesses. The
+          winner of the match will be the player with the highest score after
+          the six games.
+          <br />
+          <br />
+          <span class="modal-circles">🔵 🟡 🟢 🔴 ⚪ ⚫</span>
+        </p>
+      </div>
 
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
+      <div class="big-banner-container hidden" id="big-banner">
+        <h1 class="title" id="big-banner-main-title"></h1>
+        <h3 class="title" id="big-banner-secondary-title"></h3>
 
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="small-container">
-            <div class="marble-hole top-lef"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole top-right"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole bottom-left"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole bottom-right"></div>
-          </div>
+        <div class="lds-ellipsis hidden" id="wait-spinner">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
       </div>
 
-      <div class="board-column">
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
+      <div class="buttons-container">
+        <div class="icon">
+          <i class="fa fa-question-circle" aria-hidden="true"></i>
         </div>
 
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
+        <div class="icon">
+          <i class="fa fa-github" aria-hidden="true"></i>
         </div>
 
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
+        <div class="icon">
+          <i class="fa fa-linkedin-square" aria-hidden="true"></i>
         </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="small-container">
-            <div class="marble-hole top-lef"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole top-right"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole bottom-left"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole bottom-right"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="board-column">
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="small-container">
-            <div class="marble-hole top-lef"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole top-right"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole bottom-left"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole bottom-right"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="board-column">
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="small-container">
-            <div class="marble-hole top-lef"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole top-right"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole bottom-left"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole bottom-right"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="board-column">
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="small-container">
-            <div class="marble-hole top-lef"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole top-right"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole bottom-left"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole bottom-right"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="board-column">
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="small-container">
-            <div class="marble-hole top-lef"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole top-right"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole bottom-left"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole bottom-right"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="board-column">
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="small-container">
-            <div class="marble-hole top-lef"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole top-right"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole bottom-left"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole bottom-right"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="board-column">
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="small-container">
-            <div class="marble-hole top-lef"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole top-right"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole bottom-left"></div>
-          </div>
-          <div class="small-container">
-            <div class="marble-hole bottom-right"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="board-column secret hidden" id="secret-code">
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item">
-          <div class="hole-border shade1"></div>
-
-          <div class="hole shade2"></div>
-        </div>
-
-        <div class="column-item"></div>
-      </div>
-
-      <div class="board-column secret hidden" id="secret-cover">
-        <div class="cover-top"></div>
-      </div>
-    </div>
-
-    <div class="bottom-container hidden" id="button-container">
-      <button class="pushable" id="main-button">
-        <span class="shadow"></span>
-        <span class="edge"></span>
-        <span class="front" id="button-front"> Push Me </span>
-      </button>
-    </div>
-
-    <div class="bottom-container hidden" id="wait-indicator-container">
-      <div class="lds-ellipsis" id="wait-spinner">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-    </div>
-
-    <div
-      class="bottom-container next-game-countdown hidden"
-      id="next-game-countdown"
-    >
-      <span class="small-font">Next game will start in:</span>
-      <span class="large-font animate__animated animate__faster" id="countdown">
-        5
-      </span>
-    </div>
-
-    <div class="modal hidden">
-      <button class="close-modal">&times;</button>
-      <h2>Welcome to MASTERMIND ❗❗❗</h2>
-      <p>
-        This will be a six games match. At every game there will be two
-        alternating roles, a CODEMAKER and a CODEBRAKER. The
-        <i>codemaker</i> will choose a secret code and the
-        <i>codebraker</i> will have up to 10 guesses to brake it. The
-        <i>codemaker</i> wins one point for every wrong guess made by the
-        <i>codebraker</i>, and gets one extra point if the
-        <i>codebraker</i> fails to brake the code after the 10 guesses. The
-        winner of the match will be the player with the highest score after the
-        six games.
-        <br />
-        <br />
-        <span class="modal-circles">🔵 🟡 🟢 🔴 ⚪ ⚫</span>
-      </p>
-    </div>
-
-    <div class="big-banner-container hidden" id="big-banner">
-      <h1 class="title" id="big-banner-counter"></h1>
-      <h3 class="title" id="big-banner-role-legend">You play CODEMAKER.</h3>
-    </div>
-
-    <div class="buttons-container">
-      <div class="icon">
-        <i class="fa fa-question-circle" aria-hidden="true"></i>
-      </div>
-
-      <div class="icon">
-        <i class="fa fa-github" aria-hidden="true"></i>
-      </div>
-
-      <div class="icon">
-        <i class="fa fa-linkedin-square" aria-hidden="true"></i>
       </div>
     </div>
 

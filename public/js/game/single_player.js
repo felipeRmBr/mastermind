@@ -269,6 +269,14 @@ const changeActiveMarble = (e) => {
   activeMarble.classList.add("active-marble-picker");
 };
 
+const setColumnFocus = (columnIdx) => {
+  boardColumns[columnIdx].classList.add("on-focus");
+};
+
+const removeColumnFocus = (columnIdx) => {
+  boardColumns[columnIdx].classList.remove("on-focus");
+};
+
 const activatePegHoles = (columnIdx) => {
   boardColumns[columnIdx].classList.add(`active-column-r-${currentRole}`);
 
@@ -349,6 +357,11 @@ const clearMarbleHole = (e) => {
 
   // update the feedback array
   feedback[marbleHole.idx % 4] = -1;
+};
+
+const showSecretColum = () => {
+  secretCodeCover.classList.add("hidden");
+  secretCodeColumn.classList.remove("hidden");
 };
 
 const activateSecretColumn = () => {
@@ -610,6 +623,7 @@ socket.on("feedback-response", ({ feedback, secret, score }) => {
 
   if (feedBackSum < 4) {
     // the code is still unbroken
+
     // are there more guesses available?
     if (activeColumnIdx < 9) {
       // still have guesses
@@ -618,7 +632,9 @@ socket.on("feedback-response", ({ feedback, secret, score }) => {
       const lastActiveColumnIdx = activeColumnIdx;
       activeColumnIdx++;
 
-      deactivatePegHoles(lastActiveColumnIdx);
+      removeColumnFocus(lastActiveColumnIdx);
+      setColumnFocus(activeColumnIdx);
+
       activatePegHoles(activeColumnIdx);
 
       mainButton.addEventListener("click", requestFeedback);
@@ -658,12 +674,7 @@ socket.on("feedback-response", ({ feedback, secret, score }) => {
     score1.innerHTML = scores[0];
 
     paintSecret(secret);
-
-    mainButton.removeEventListener("click", sendFeedback);
-    hideButtonContainer();
-
-    secretCodeCover.classList.add("hidden");
-    secretCodeColumn.classList.remove("hidden");
+    showSecretColum();
 
     // are there more games to play?
     if (gameIdx < nGames - 1) {
@@ -731,9 +742,10 @@ const requestFeedback = () => {
 
   if (soundActive) sounds.click.play();
 
-  socket.emit("feedback-request-single", { sessionId, guess, activeColumnIdx });
-
+  deactivatePegHoles(lastActiveColumnIdx);
   resetGuess();
+
+  socket.emit("feedback-request-single", { sessionId, guess, activeColumnIdx });
 
   // reset mainButton (remove eventListener should be last)
   mainButton.removeEventListener("click", requestFeedback);

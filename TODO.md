@@ -6,3 +6,4 @@
 - proteger rutas
 - cambiar favico
 - fonts in game screens
+- disabled column as soon as feedback is requested

@@ -80,7 +80,7 @@ socket.on("new-code", (code) => {
 });
 
 socket.on("partner-ready", (payload) => {
-  window.location = `game.html?session=${sessionCode}&player=1`;
+  window.location = `multiplayer-game.html?session=${sessionCode}&player=1`;
 });
 
 //usernameInput.addEventListener("keypress", catchUsernameEnter);
