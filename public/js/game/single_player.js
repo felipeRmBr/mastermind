@@ -129,6 +129,7 @@ const initializeElements = () => {
 };
 
 const prepareBoard = () => {
+  document.querySelector("#buttons-container").classList.remove("hidden");
   mainContainer.classList.remove("hidden");
   gameSpan.innerHTML = `GAME: ${gameIdx + 1}`;
 
@@ -900,6 +901,7 @@ const requestFeedback = () => {
   /* let hideLoadingResponse = await hideLoadingBanner();
   console.log(hideLoadingResponse); */
 
+  overlay.classList.remove("solid");
   let bannerResponse = showBigBanner(
     `GAME ${gameIdx + 1}`,
     `You play ${"CODEBRAKER"}. START YOUR GUESSING.`
