@@ -560,38 +560,115 @@
           </span>
         </div>
       </div>
+    </div>
 
-      <div class="modal hidden">
-        <button class="close-modal">&times;</button>
-        <h2>Welcome to MASTERMIND ❗❗❗</h2>
-        <p>
-          This will be a six games match. At every game there will be two
-          alternating roles, a CODEMAKER and a CODEBRAKER. The
-          <i>codemaker</i> will choose a secret code and the
-          <i>codebraker</i> will have up to 10 guesses to brake it. The
-          <i>codemaker</i> wins one point for every wrong guess made by the
-          <i>codebraker</i>, and gets one extra point if the
-          <i>codebraker</i> fails to brake the code after the 10 guesses. The
-          winner of the match will be the player with the highest score after
-          the six games.
-          <br />
-          <br />
-          <span class="modal-circles">🔵 🟡 🟢 🔴 ⚪ ⚫</span>
-        </p>
+    <div class="modal hidden">
+      <button class="close-modal">&times;</button>
+      <p class="help">
+        <b>Mastermind is a strategy game of Codemaker vs. Codebreaker.</b
+        ><br /><br />
+        The <b>Codemaker</b> starts by choosing a pattern of four code pegs;
+        duplicates and blanks are allowed depending on game settings, so the
+        player could even choose four code pegs of the same color or four
+        blanks. Then the <b>Codebraker</b> tries to use logic and deduction to
+        guess the pattern, in both order and color. <br /><br />
+      </p>
+
+      <p class="help hidden" id="help-2">
+        Each guess is made by placing a column of code pegs on the decoding
+        board. Once the guess is in place, the <b>Codemaker</b> provides
+        feedback by placing from zero to four marbles in the small holes of the
+        column with the guess. A red marble is placed for each code peg from the
+        guess which is correct in both color and position; and a white marble is
+        placed for each code peg of the right color placed in the wrong
+        position. <br /><br />
+      </p>
+
+      <p class="help hidden" id="help-3">
+        In the single-player mode you will play the <b>Codebreaker</b>, and the
+        MasterBot will play the <b>Codemaker</b>. At each game you earn points
+        depending on the number of guesses you make before braking the code. You
+        can win up to 10 points, but if after ten guesses you fail to brake the
+        code then you lose 5 points. <br /><br />If you need more info check
+        <a
+          href="https://en.wikipedia.org/wiki/Mastermind_(board_game)"
+          target="_blank"
+          >this Wickipedia entry</a
+        >. <br /><br />
+      </p>
+
+      <span class="modal-marbles">🔵 🟡 🟢 🔴 ⚪ ⚫</span>
+
+      <div class="arrows-container">
+        <i
+          class="fa fa-chevron-left"
+          aria-hidden="true"
+          id="help-arrow-left"
+        ></i>
+        <i
+          class="fa fa-chevron-right active"
+          aria-hidden="true"
+          id="help-arrow-right"
+        ></i>
+      </div>
+    </div>
+
+    <div class="modal-2 hidden">
+      <button class="close-modal">&times;</button>
+      <p>
+        Mastermind is a strategy game of Codemaker vs. Codebreaker.<br />
+        <br />
+        The Codemaker sets a secret code, and the Codebreaker tries to match it
+        using logic and deduction. After each move, the Codemaker gives clues to
+        the Codebreaker. In the single-player mode you will play as the
+        Codebraker, and the Codemaker will be played by the MasterBot. At each
+        game you earn points depending on the number of guesses made before
+        braking the code. You can win up to 10 points, but if after ten guesses
+        you fail to brake the code then you lose 5 points. <br /><br />If you
+        need more info check
+        <a
+          href="https://en.wikipedia.org/wiki/Mastermind_(board_game)"
+          target="_blank"
+          >this Wickipedia entry</a
+        >.
+        <br />
+        <br />
+        <span class="modal-circles">🔵 🟡 🟢 🔴 ⚪ ⚫</span>
+      </p>
+
+      <div class="arrows-container">
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
       </div>
     </div>
 
     <div class="buttons-container">
-      <div class="icon">
-        <i class="fa fa-question-circle" aria-hidden="true"></i>
+      <div class="game-buttons">
+        <div class="icon">
+          <i class="fa fa-home" aria-hidden="true" id="home-button"></i>
+        </div>
+
+        <div class="icon">
+          <i class="fa fa-volume-up" aria-hidden="true" id="sound-control"></i>
+        </div>
+
+        <div class="icon">
+          <i
+            class="fa fa-question-circle"
+            aria-hidden="true"
+            id="help-button"
+          ></i>
+        </div>
       </div>
 
-      <div class="icon">
-        <i class="fa fa-github" aria-hidden="true"></i>
-      </div>
+      <div class="info-buttons">
+        <div class="icon">
+          <i class="fa fa-github" aria-hidden="true"></i>
+        </div>
 
-      <div class="icon">
-        <i class="fa fa-linkedin-square" aria-hidden="true"></i>
+        <div class="icon">
+          <i class="fa fa-linkedin-square" aria-hidden="true"></i>
+        </div>
       </div>
     </div>
 

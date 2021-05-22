@@ -81,8 +81,28 @@ const waitSpinner = document.querySelector("#wait-spinner");
 const nextGameCountdown = document.querySelector("#next-game-countdown");
 const countdown = document.querySelector("#countdown");
 
+const soundControl = document.querySelector("#sound-control");
+const helpButton = document.querySelector("#help-button");
+const homeButton = document.querySelector("#home-button");
+
 /*------------- MAIN FUNCTIONS --------------*/
 const initializeElements = () => {
+  homeButton.addEventListener("click", () => {
+    window.location = `main-options.html`;
+  });
+
+  helpButton.addEventListener("click", () => {
+    openModal();
+  });
+
+  soundControl.addEventListener("click", () => {
+    soundActive = !soundActive;
+    if (soundActive) sounds.select.play();
+
+    soundControl.classList.remove("fa-volume-up", "fa-volume-off");
+    soundControl.classList.add(soundActive ? "fa-volume-up" : "fa-volume-off");
+  });
+
   // initialize the idx of the colorPicker elements
   colorPickers.forEach((colorPicker, idx) => {
     colorPicker["color_idx"] = idx;
@@ -485,10 +505,16 @@ const resetGuess = () => (guess = [-1, -1, -1, -1]);
 /* ----------  MODAL, BIG BANNER & ERR MESSAGE CONTROL  ---------- */
 /*-----------------------------------------------------------------*/
 
+/* Overlay */
+const overlay = document.querySelector(".overlay");
+
 /* Modal Screen */
 const modal = document.querySelector(".modal");
-const overlay = document.querySelector(".overlay");
 const btnCloseModal = document.querySelector(".close-modal");
+
+const helpContainers = document.querySelectorAll(".help");
+const helpArrowLeft = document.querySelector("#help-arrow-left");
+const helpArrowRight = document.querySelector("#help-arrow-right");
 
 /* Big Banner */
 const bigBanner = document.querySelector("#big-banner");
@@ -502,6 +528,61 @@ const loadingPageIndicator = document.querySelector("#loading-page-indicator");
 /* Error banner */
 const errorBanner = document.querySelector("#error-banner");
 const errorMessage = document.querySelector("#error-message");
+
+let activeHelp = 0;
+let leftActive = false;
+let rightACtive = true;
+
+const updateHelpArrowsState = (activeHelp) => {
+  helpArrowLeft.className = "fa fa-chevron-left active";
+  helpArrowRight.className = "fa fa-chevron-right active";
+
+  leftActive = true;
+  rightACtive = true;
+
+  if (activeHelp == 0) {
+    helpArrowLeft.classList.remove("active");
+    leftActive = false;
+    return;
+  }
+
+  if (activeHelp == helpContainers.length - 1) {
+    helpArrowRight.classList.remove("active");
+    rightACtive = false;
+    return;
+  }
+};
+
+const helpLeft = () => {
+  if (leftActive) {
+    console.log("running helpLeft");
+    animateCSS(helpContainers[activeHelp], "fadeOut").then((_) => {
+      helpContainers[activeHelp].classList.add("hidden");
+      activeHelp--;
+      updateHelpArrowsState(activeHelp);
+
+      helpContainers[activeHelp].classList.remove("hidden");
+      animateCSS(helpContainers[activeHelp], "fadeIn");
+    });
+  }
+};
+
+const helpRight = () => {
+  if (rightACtive) {
+    console.log("running helpRight");
+    animateCSS(helpContainers[activeHelp], "fadeOut").then((_) => {
+      helpContainers[activeHelp].classList.add("hidden");
+      activeHelp++;
+      updateHelpArrowsState(activeHelp);
+
+      helpContainers[activeHelp].classList.remove("hidden");
+      animateCSS(helpContainers[activeHelp], "fadeIn");
+    });
+  }
+};
+
+helpArrowLeft.addEventListener("click", helpLeft);
+helpArrowRight.addEventListener("click", helpRight);
 
 const showBigBanner = function (mainTitle, secondaryTitle) {
   return new Promise((resolve, reject) => {
@@ -778,8 +859,8 @@ const requestFeedback = () => {
 /*-----------------------------------------------------------------*/
 
 (async () => {
-  let showLoadingResponse = await showLoadingBanner();
-  console.log(showLoadingResponse);
+  /* let showLoadingResponse = await showLoadingBanner();
+  console.log(showLoadingResponse); */
 
   initializeElements();
 
@@ -788,8 +869,8 @@ const requestFeedback = () => {
 
   prepareBoard();
 
-  let hideLoadingResponse = await hideLoadingBanner();
-  console.log(hideLoadingResponse);
+  /* let hideLoadingResponse = await hideLoadingBanner();
+  console.log(hideLoadingResponse); */
 
   let bannerResponse = showBigBanner(
     `GAME ${gameIdx + 1}`,
