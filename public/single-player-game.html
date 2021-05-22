@@ -20,12 +20,12 @@
       rel="stylesheet"
     />
 
-    <!-- font awesome -->
-    <link rel="stylesheet" href="./css/font-awesome/css/font-awesome.min.css" />
+    <!-- loader-indicator -->
+    <link rel="stylesheet" href="./css/loader_1.css" />
   </head>
 
   <body>
-    <div class="main-container">
+    <div class="hidden" id="main-container">
       <div class="top-container">
         <div class="game-counter">
           <span id="game-span"></span>
@@ -532,34 +532,33 @@
         </div>
       </div>
 
-      <div class="bottom-container hidden" id="button-container">
-        <button class="pushable" id="main-button">
-          <span class="shadow"></span>
-          <span class="edge"></span>
-          <span class="front" id="button-front"> Push Me </span>
-        </button>
-      </div>
-
-      <div class="bottom-container hidden" id="wait-indicator-container">
-        <div class="lds-ellipsis" id="wait-spinner">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
+      <div class="bottom-container">
+        <div class="hidden" id="button-container">
+          <button class="pushable" id="main-button">
+            <span class="shadow"></span>
+            <span class="edge"></span>
+            <span class="front" id="button-front"> Push Me </span>
+          </button>
         </div>
-      </div>
 
-      <div
-        class="bottom-container next-game-countdown hidden"
-        id="next-game-countdown"
-      >
-        <span class="small-font">Next game will start in:</span>
-        <span
-          class="large-font animate__animated animate__faster"
-          id="countdown"
-        >
-          5
-        </span>
+        <div class="hidden" id="wait-indicator-container">
+          <div class="lds-ellipsis" id="wait-spinner">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+
+        <div class="hidden" id="next-game-countdown">
+          <span class="small-font">Next game will start in:</span>
+          <span
+            class="large-font animate__animated animate__faster"
+            id="countdown"
+          >
+            5
+          </span>
+        </div>
       </div>
 
       <div class="modal hidden">
@@ -580,31 +579,19 @@
           <span class="modal-circles">🔵 🟡 🟢 🔴 ⚪ ⚫</span>
         </p>
       </div>
+    </div>
 
-      <div class="big-banner-container hidden" id="big-banner">
-        <h1 class="title" id="big-banner-main-title"></h1>
-        <h3 class="title" id="big-banner-secondary-title"></h3>
-
-        <div class="lds-ellipsis hidden" id="wait-spinner">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
+    <div class="buttons-container">
+      <div class="icon">
+        <i class="fa fa-question-circle" aria-hidden="true"></i>
       </div>
 
-      <div class="buttons-container">
-        <div class="icon">
-          <i class="fa fa-question-circle" aria-hidden="true"></i>
-        </div>
+      <div class="icon">
+        <i class="fa fa-github" aria-hidden="true"></i>
+      </div>
 
-        <div class="icon">
-          <i class="fa fa-github" aria-hidden="true"></i>
-        </div>
-
-        <div class="icon">
-          <i class="fa fa-linkedin-square" aria-hidden="true"></i>
-        </div>
+      <div class="icon">
+        <i class="fa fa-linkedin-square" aria-hidden="true"></i>
       </div>
     </div>
 
@@ -613,14 +600,32 @@
       <span id="error-message">"SOME ERROR"</span>
     </div>
 
-    <div class="overlay hidden"></div>
-  </body>
+    <div class="big-banner-container hidden" id="big-banner">
+      <h1 class="title" id="big-banner-main-title"></h1>
+      <h3 class="title" id="big-banner-secondary-title"></h3>
+    </div>
 
-  <script src="./socket.io/socket.io.js"></script>
-  <script src="./js/game/single_player.js"></script>
+    <div class="loading-page-indicator hidden" id="loading-page-indicator">
+      <div class="dl">
+        <div class="dl__container">
+          <div class="dl__corner--top"></div>
+          <div class="dl__corner--bottom"></div>
+        </div>
+        <div class="dl__square"></div>
+      </div>
+    </div>
+
+    <div class="overlay solid hidden"></div>
+  </body>
 
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
   />
+
+  <script src="./socket.io/socket.io.js"></script>
+  <script src="./js/game/single_player.js"></script>
+
+  <!-- font awesome -->
+  <link rel="stylesheet" href="./css/font-awesome/css/font-awesome.min.css" />
 </html>

@@ -29,15 +29,16 @@ let feedback = [-1, -1, -1, -1];
 let scores = [0, 0];
 
 const sounds = {
-  click: new Audio("../audio/click.mp3"),
-  select: new Audio("../audio/select.mp3"),
-  bell: new Audio("../audio/new-ticket.mp3"),
-  error: new Audio("../audio/error.mp3"),
+  click: new Audio("../assets/audio/click.mp3"),
+  select: new Audio("../assets/audio/select.mp3"),
+  bell: new Audio("../assets/audio/new-ticket.mp3"),
+  error: new Audio("../assets/audio/error.mp3"),
 };
 
 /*-----------------------------------------------------------------*/
 /*--------------------- GENERAL GAME CONTROL ----------------------*/
 /*-----------------------------------------------------------------*/
+const mainContainer = document.querySelector("#main-container");
 
 /* Pickers */
 const colorPickers = document.querySelectorAll(".color-picker");
@@ -106,6 +107,7 @@ const initializeElements = () => {
 };
 
 const prepareBoard = () => {
+  mainContainer.classList.remove("hidden");
   gameSpan.innerHTML = `GAME: ${gameIdx + 1}/${nGames}`;
 
   if (currentRole == "CB") {
@@ -466,13 +468,12 @@ const animateCSS = (node, animation, prefix = "animate__") => {
   // We create a Promise and return it
   return new Promise((resolve, reject) => {
     const animationName = `${prefix}${animation}`;
-
-    node.classList.add("animate__animated", animationName, "animate__faster");
+    node.classList.add("animate__animated", animationName);
 
     // When the animation ends, we clean the classes and resolve the Promise
     function handleAnimationEnd(event) {
       event.stopPropagation();
-      node.classList.remove(`${prefix}animated`, animationName);
+      node.classList.remove("animate__animated", animationName);
       resolve("Animation ended");
     }
 
@@ -494,8 +495,12 @@ const btnCloseModal = document.querySelector(".close-modal");
 
 /* Big Banner */
 const bigBanner = document.querySelector("#big-banner");
-const bbGameCounter = document.querySelector("#big-banner-counter");
-const bbRoleLegend = document.querySelector("#big-banner-role-legend");
+const bbMainTitle = document.querySelector("#big-banner-main-title");
+const bbSecondaryTitle = document.querySelector("#big-banner-secondary-title");
+const bbSpinner = document.querySelector("#wait-spinner");
+
+/* Loading page indicator */
+const loadingPageIndicator = document.querySelector("#loading-page-indicator");
 
 /* Error banner */
 const errorBanner = document.querySelector("#error-banner");
@@ -503,19 +508,50 @@ const errorMessage = document.querySelector("#error-message");
 
 const showBigBanner = function (mainTitle, secondaryTitle) {
   return new Promise((resolve, reject) => {
-    bbGameCounter.innerHTML = mainTitle;
-    bbRoleLegend.innerHTML = secondaryTitle;
+    bbMainTitle.innerHTML = mainTitle;
+    bbSecondaryTitle.innerHTML = secondaryTitle;
 
     overlay.classList.remove("hidden");
     bigBanner.classList.remove("hidden");
-    animateCSS(bigBanner, "fadeIn").then((message) => {
+
+    animateCSS(bigBanner, "fadeIn").then((_) => {
       setTimeout(() => {
-        animateCSS(bigBanner, "fadeOut").then((message) => {
+        animateCSS(overlay, "fadeOut");
+        animateCSS(bigBanner, "fadeOut").then((_) => {
           bigBanner.classList.add("hidden");
           overlay.classList.add("hidden");
           resolve("BIG BANNER HIDDEN");
         });
-      }, 2000);
+      }, 2500);
+    });
+  });
+};
+
+const showLoadingBanner = function () {
+  return new Promise((resolve, reject) => {
+    overlay.classList.add("solid");
+    overlay.classList.remove("hidden");
+
+    animateCSS(overlay, "fadeIn").then((message) => {
+      loadingPageIndicator.classList.remove("hidden");
+      animateCSS(loadingPageIndicator, "fadeIn").then((message) => {
+        setTimeout(() => {
+          resolve("LOADING banner on place!!!");
+        }, 5000);
+      });
+    });
+  });
+};
+
+const hideLoadingBanner = function (mainTitle, secondaryTitle, style) {
+  return new Promise((resolve, reject) => {
+    animateCSS(loadingPageIndicator, "fadeOut").then((_) => {
+      loadingPageIndicator.classList.add("hidden");
+      animateCSS(overlay, "fadeOut").then((_) => {
+        overlay.classList.add("hidden");
+        overlay.classList.remove("solid");
+        resolve("Loading Banner is hidden.");
+      });
     });
   });
 };
@@ -570,22 +606,6 @@ socket.on("disconnect", () => {
   // connectionLabel.innerText = "Disconnected!!";
 });
 
-/* socket.emit("join-request", { sessionId }, ({ players }) => {
-  if (!players) {
-    console.log("problems joining the game-session");
-    return;
-  }
-
-  const [player1, player2] = players;
-  username1.innerHTML = player1;
-  username2.innerHTML = player2;
-  score1.innerHTML = "00";
-  score2.innerHTML = "00";
-
-  console.log("joined to game-session");
-});
- */
-
 socket.on("test-emit", (payload) => {
   console.log("test arrived!!!");
 });
@@ -614,6 +634,7 @@ socket.on("secret-ready", (payload) => {
 socket.on("feedback-response", ({ feedback, secret, score }) => {
   if (soundActive) sounds.bell.play();
 
+  resetGuess();
   paintFeedback(feedback);
   hideWaitIndicator();
 
@@ -694,14 +715,17 @@ socket.on("feedback-response", ({ feedback, secret, score }) => {
 });
 
 const makeFirstContact = () => {
-  socket.emit("first-contact", { sessionId }, ({ ok, nGamesResponse }) => {
-    if (ok) {
-      console.log("session found!!!!");
-      nGames = nGamesResponse;
-      return;
-    } else {
-      console.log("session not found");
-    }
+  return new Promise((resolve, reject) => {
+    socket.emit("first-contact", { sessionId }, ({ ok, nGamesResponse }) => {
+      if (ok) {
+        console.log("session found!!!!");
+        nGames = nGamesResponse;
+        resolve("First contact succesfull");
+      } else {
+        console.log("session not found");
+        resolve("First contact error!!");
+      }
+    });
   });
 };
 
@@ -742,9 +766,7 @@ const requestFeedback = () => {
 
   if (soundActive) sounds.click.play();
 
-  deactivatePegHoles(lastActiveColumnIdx);
-  resetGuess();
-
+  deactivatePegHoles(activeColumnIdx);
   socket.emit("feedback-request-single", { sessionId, guess, activeColumnIdx });
 
   // reset mainButton (remove eventListener should be last)
@@ -755,12 +777,32 @@ const requestFeedback = () => {
 /*-----------------------------------------------------------------*/
 /* ---------------------   INITIAL SETTINGS  --------------------- */
 /*-----------------------------------------------------------------*/
-initializeElements();
-makeFirstContact();
-prepareBoard();
-showBigBanner(`GAME ${gameIdx + 1}/${nGames}`, `You play ${"CODEBRAKER"}`);
 
-checkSecretReady();
+(async () => {
+  let showLoadingResponse = await showLoadingBanner();
+  console.log(showLoadingResponse);
+
+  initializeElements();
+
+  let firstContactResponse = await makeFirstContact();
+  console.log(firstContactResponse);
+
+  prepareBoard();
+
+  let hideLoadingResponse = await hideLoadingBanner();
+  console.log(hideLoadingResponse);
+
+  let bannerResponse = showBigBanner(
+    `GAME ${gameIdx + 1}`,
+    `You play ${"CODEBRAKER"}. Start your guessing.`
+  );
+
+  console.log(bannerResponse);
+
+  if (soundActive) sounds.bell.play();
+
+  //checkSecretReady();
+})();
 
 // CODE-MAKER SIDE CONTROL
 //

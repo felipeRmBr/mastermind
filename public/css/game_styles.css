@@ -19,6 +19,7 @@
 
 /* sacle 90% */
 :root {
+  --animate-duration: 3s;
   --colors-bar-height: 297px;
   --colors-bar-width: 90px;
   --color-picker-radius: 27px;
@@ -58,8 +59,10 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   background: var(--lighter-gray);
   min-width: 1000px;
+  height: 100vh;
 }
 
 h3 {
@@ -75,8 +78,7 @@ h3 {
   justify-content: space-between;
   align-items: flex-start;
   width: var(--board-width);
-  padding-top: 2.5em;
-  padding-bottom: 2.5em;
+  margin-bottom: 2.5em;
 }
 
 .title-container {
@@ -141,11 +143,10 @@ h3 {
 .bottom-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
-  margin-top: 1.9rem;
-  margin-bottom: 2.5rem;
   width: var(--board-width);
+  height: 3.5em;
 }
 
 .next-game-countdown {
@@ -576,6 +577,7 @@ h3 {
 }
 
 .big-banner-container {
+  opacity: 1;
   font-family: sans-serif;
   color: white;
   position: absolute;
@@ -612,13 +614,8 @@ h3 {
 }
 
 .overlay.solid {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
+  background-color: var(--lighter-gray);
+  backdrop-filter: blur(0px);
   z-index: 9;
 }
 
