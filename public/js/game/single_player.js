@@ -108,7 +108,7 @@ const initializeElements = () => {
 
 const prepareBoard = () => {
   mainContainer.classList.remove("hidden");
-  gameSpan.innerHTML = `GAME: ${gameIdx + 1}/${nGames}`;
+  gameSpan.innerHTML = `GAME: ${gameIdx + 1}`;
 
   if (currentRole == "CB") {
     // CODE BRAKER
@@ -157,10 +157,7 @@ const nextGame = () => {
   gameIdx++;
 
   prepareBoard();
-  showBigBanner(
-    `GAME ${gameIdx + 1}/${nGames}`,
-    `Your current score: ${scores[0]}`
-  );
+  showBigBanner(`GAME ${gameIdx + 1}`, `Your current score: ${scores[0]}`);
 
   checkSecretReady();
 };
@@ -189,9 +186,9 @@ const resetBoard = () => {
   secretCodeColumn.className = "board-column secret hidden";
   secretCodeCover.className = "board-column secret hidden";
 
-  waitIndicatorContainer.className = "bottom-container hidden";
-  nextGameCountdown.className = "bottom-container next-game-countdown hidden";
-  buttoncontainer.className = "bottom-container hidden";
+  waitIndicatorContainer.className = "hidden";
+  nextGameCountdown.className = "next-game-countdown hidden";
+  buttoncontainer.className = "hidden";
 };
 
 const showFinalScore = () => {
@@ -662,7 +659,12 @@ socket.on("feedback-response", ({ feedback, secret, score }) => {
       showButtonContainer();
     } else {
       // The ten guesses were used
-      mainButton.removeEventListener("click", sendFeedback);
+      console.log(score);
+      scores[0] += score;
+
+      score1.innerHTML = scores[0] > 9 ? scores[0] : "0" + String(scores[0]);
+
+      mainButton.removeEventListener("click", requestFeedback);
       hideButtonContainer();
 
       // show the secret code
@@ -670,8 +672,15 @@ socket.on("feedback-response", ({ feedback, secret, score }) => {
       secretCodeCover.classList.add("hidden");
       secretCodeColumn.classList.remove("hidden");
 
+      showBigBanner(
+        `You used your ten guesses =(`,
+        `Launching next game...`
+      ).then((message) => {
+        startNextGameCountdown();
+      });
+
       // are there more games to play?
-      if (gameIdx < nGames - 1) {
+      /* if (gameIdx < nGames - 1) {
         // there are still games to play
         showBigBanner(
           `You used your ten guesses =(`,
@@ -685,32 +694,22 @@ socket.on("feedback-response", ({ feedback, secret, score }) => {
           `You used your ten guesses =(`,
           `The match is over, and your final score is ${scores[0]}`
         ).then((message) => showFinalScore());
-      }
+      } */
     }
   } else if (feedBackSum === 4) {
     // the code is broken
     console.log(score);
     scores[0] += score;
 
-    score1.innerHTML = scores[0];
+    score1.innerHTML = scores[0] > 9 ? scores[0] : "0" + String(scores[0]);
 
     paintSecret(secret);
     showSecretColum();
 
-    // are there more games to play?
-    if (gameIdx < nGames - 1) {
-      // there are still games to play
-      showBigBanner(
-        `WELL DONE!!! YOU BROKE THE CODE.`,
-        `Launching next game...`
-      ).then((message) => startNextGameCountdown());
-    } else if (gameIdx == nGames - 1) {
-      // the match is over
-      showBigBanner(
-        `WELL DONE!!! YOU BROKE THE CODE.`,
-        `The match is over, and your final score is ${scores[0]}`
-      ).then((message) => showFinalScore());
-    }
+    showBigBanner(
+      `WELL DONE!!! YOU BROKE THE CODE.`,
+      `Launching next game...`
+    ).then((message) => startNextGameCountdown());
   }
 });
 
@@ -794,14 +793,12 @@ const requestFeedback = () => {
 
   let bannerResponse = showBigBanner(
     `GAME ${gameIdx + 1}`,
-    `You play ${"CODEBRAKER"}. Start your guessing.`
+    `You play ${"CODEBRAKER"}. START YOUR GUESSING.`
   );
 
   console.log(bannerResponse);
 
-  if (soundActive) sounds.bell.play();
-
-  //checkSecretReady();
+  checkSecretReady();
 })();
 
 // CODE-MAKER SIDE CONTROL

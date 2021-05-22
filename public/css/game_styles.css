@@ -141,6 +141,7 @@ h3 {
 }
 
 .bottom-container {
+  color: white;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -150,6 +151,10 @@ h3 {
 }
 
 .next-game-countdown {
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  height: 3.5em;
   color: white;
 }
 
@@ -168,6 +173,7 @@ h3 {
   vertical-align: center;
   line-height: 30px;
   font-size: 30px;
+  font-weight: bolder;
 }
 
 .request-button {
