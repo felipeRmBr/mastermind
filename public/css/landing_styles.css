@@ -12,6 +12,7 @@ body {
 }
 
 .landing-form {
+  text-align: center;
   width: 100%;
   max-width: 330px;
   padding: 15px;
@@ -29,8 +30,9 @@ body {
   display: none;
 }
 
-.form-signin .checkbox {
-  font-weight: 400;
+.landing-form .form-check-label {
+  text-align: left !important;
+  width: 100%;
 }
 
 .form-signin .form-floating:focus-within {

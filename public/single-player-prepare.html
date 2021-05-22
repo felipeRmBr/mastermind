@@ -28,7 +28,7 @@
     <link href="./css/landing_styles.css" rel="stylesheet" />
   </head>
 
-  <body class="text-center">
+  <body>
     <main class="landing-form" id="form-new-session">
       <form onsubmit="event.stopPropagation()">
         <img
@@ -51,7 +51,7 @@
           <label for="floatingInput">Your username</label>
         </div>
 
-        <div class="form-floating">
+        <!-- <div class="form-floating">
           <input
             type="number"
             step="2"
@@ -63,6 +63,35 @@
             placeholder=""
           />
           <label for="number-games">Games per match</label>
+        </div> -->
+
+        <div class="form-check form-switch mt-3 mb-1">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="flexSwitchCheckDefault"
+            checked
+          />
+          <label
+            class="form-check-label"
+            for="flexSwitchCheckDefault"
+            id="check-label-duplicates"
+            >Allow duplicates on secret code</label
+          >
+        </div>
+
+        <div class="form-check form-switch mb-4">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="flexSwitchCheckChecked"
+          />
+          <label
+            class="form-check-label"
+            for="flexSwitchCheckChecked"
+            id="check-label-blanks"
+            >Allow blanks on secret code</label
+          >
         </div>
 
         <button
@@ -71,7 +100,7 @@
           onClick="return requestNewCode();"
           id="code-request-button"
         >
-          Get a session code
+          Start playing
         </button>
 
         <p class="mt-5 mb-3 text-muted">
