@@ -581,6 +581,7 @@ h3 {
 }
 
 .modal {
+  height: 421px;
   font-family: sans-serif;
   color: #333;
   font-size: 18px;
@@ -589,7 +590,6 @@ h3 {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 55ch;
 
   background-color: white;
   padding: 3rem 4.5rem 3rem 4.5rem;
@@ -606,7 +606,10 @@ h3 {
 
 .help {
   --animate-duration: 0.4s;
+  height: 240px;
+  width: 55ch;
 }
+
 .arrows-container {
   display: flex;
   justify-content: center;
