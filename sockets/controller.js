@@ -126,36 +126,62 @@ const socketController = (socket, io) => {
     console.log("Game reset, new secret:", newSecret);
   };
 
-  socket.on("new-single-game", ({ username, nGames }, callback) => {
-    const newSessionPin = getNewSessionPin();
-    sessionIds.push(newSessionPin);
+  socket.on(
+    "new-single-game",
+    ({ username, allowDuplicates, allowBlanks }, callback) => {
+      console.log(username, allowDuplicates, allowBlanks);
+      const newSessionPin = getNewSessionPin();
+      sessionIds.push(newSessionPin);
 
-    const gameSession = new GameSession(newSessionPin, [username], nGames);
-    gameSession.game.setSecret(botPlayer.generateSecret());
+      const gameSession = new GameSession({
+        sessionPin: newSessionPin,
+        players: [username],
+        nGames: 0,
+        allowDuplicates: allowDuplicates,
+        allowBlanks: allowBlanks,
+      });
 
-    gameSessions[newSessionPin] = gameSession;
+      gameSession.game.setSecret(
+        botPlayer.generateSecret(allowDuplicates, allowBlanks)
+      );
 
-    console.log(
-      `New single player game. Username: ${username}; 
+      gameSessions[newSessionPin] = gameSession;
+
+      console.log(
+        `New single player game. Username: ${username}; 
       Session pin: ${newSessionPin}; 
       secret ${gameSession.game.secret};
       nGames ${gameSession.nGames}`
-    );
+      );
 
-    callback({ ok: true, newCode: newSessionPin });
-  });
+      callback({ ok: true, newCode: newSessionPin });
+    }
+  );
 
   socket.on("first-contact", ({ sessionId }, callback) => {
-    const gameSession = gameSessions[sessionId];
-    if (gameSession) {
-      callback({ ok: true, nGamesResponse: gameSession.nGames });
-    } else {
+    if (!sessionIds.includes(sessionId)) {
       console.log("session not found");
       callback({ ok: false });
+      return;
+    }
+
+    const gameSession = gameSessions[sessionId];
+    if (gameSession) {
+      callback({
+        ok: true,
+        allowDuplicates: gameSession.allowDuplicates,
+        allowBlanks: gameSession.allowBlanks,
+      });
     }
   });
 
   socket.on("check-secret-ready", ({ sessionId }, callback) => {
+    if (!sessionIds.includes(sessionId)) {
+      console.log("session not found");
+      callback({ ok: false });
+      return;
+    }
+
     const gameSecret = gameSessions[sessionId].game.secret;
     if (gameSecret) {
       console.log("Secret ready:", gameSecret);

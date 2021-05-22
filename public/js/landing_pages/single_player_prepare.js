@@ -1,10 +1,9 @@
 let sessionCode = -1;
 
-const codeReadyContainer = document.querySelector("#code-ready-message");
 const mainContainer = document.querySelector("#form-new-session");
-
 const usernameInput = document.querySelector("#username-input");
-const numberGamesInput = document.querySelector("#number-games-input");
+const duplicatesSwitch = document.querySelector("#duplicates-switch");
+const blanksSwitch = document.querySelector("#blanks-switch");
 
 const codeRequestButton = document.querySelector("#code-request-button");
 
@@ -42,13 +41,14 @@ const catchUsernameEnter = (e) => {
 const requestNewCode = (e) => {
   //e.preventDefault();
   const username = usernameInput.value;
-  const nGames = numberGamesInput.value;
+  const allowDuplicates = duplicatesSwitch.checked;
+  const allowBlanks = blanksSwitch.checked;
 
   if (username.length < 5) return true;
   console.log("code requested");
   socket.emit(
     "new-single-game",
-    { username: username, nGames: nGames },
+    { username: username, allowDuplicates, allowBlanks },
     ({ ok, newCode }) => {
       if (!ok) {
         console.log("REQUEST ERROR!!!");
@@ -72,16 +72,3 @@ socket.on("disconnect", () => {
   console.log("Server disconnected =(");
   // connectionLabel.innerText = "Disconnected!!";
 });
-
-/* socket.on("new-code", (code) => {
-  codeLabel.innerText = code;
-  mainContainer.classList.add("hide");
-  codeReadyContainer.classList.remove("hide");
-});
-
-socket.on("partner-ready", (payload) => {
-  window.location = `game.html?session=${sessionCode}&player=1`;
-}); */
-
-//usernameInput.addEventListener("keypress", catchUsernameEnter);
-//codeRequestButton.addEventListener("click", requestNewCode);

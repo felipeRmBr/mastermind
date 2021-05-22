@@ -69,26 +69,22 @@
           <input
             class="form-check-input"
             type="checkbox"
-            id="flexSwitchCheckDefault"
+            id="duplicates-switch"
             checked
           />
           <label
             class="form-check-label"
-            for="flexSwitchCheckDefault"
+            for="duplicates-switch"
             id="check-label-duplicates"
             >Allow duplicates on secret code</label
           >
         </div>
 
         <div class="form-check form-switch mb-4">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="flexSwitchCheckChecked"
-          />
+          <input class="form-check-input" type="checkbox" id="blanks-switch" />
           <label
             class="form-check-label"
-            for="flexSwitchCheckChecked"
+            for="blanks-switch"
             id="check-label-blanks"
             >Allow blanks on secret code</label
           >
@@ -112,28 +108,6 @@
           >
         </p>
       </form>
-    </main>
-
-    <main class="code-ready-message hidden" id="code-ready-message">
-      <img
-        class="mb-4"
-        src="./assets/img/M3.svg"
-        alt=""
-        width="250"
-        height="63"
-      />
-      <h4 class="h4 mb-3 fw-normal">Your session code is ready.</h4>
-
-      <h1 class="h1 mb-3 fw-normal" id="session-pin">3455</h1>
-
-      <h4 class="h4 mb-3 fw-normal">
-        Send this PIN to your partner and get ready to Mastermind.
-      </h4>
-
-      <p class="mt-5 mb-3 text-muted">
-        Please stay on this window. <br />You will be atomaticly redirected once
-        your friend is connected.
-      </p>
     </main>
 
     <script src="./socket.io/socket.io.js"></script>

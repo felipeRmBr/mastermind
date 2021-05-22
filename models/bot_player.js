@@ -1,12 +1,25 @@
 class BotPlayer {
-  generateSecret() {
+  generateSecret(allowDuplicates, allowBlanks) {
     let secret = [];
-    for (let i = 0; i < 4; i++) {
-      const randomPick = Math.floor(Math.random() * 6);
-      secret.push(randomPick);
-    }
+    if (allowDuplicates) {
+      for (let i = 0; i < 4; i++) {
+        const randomPick = allowBlanks
+          ? Math.floor(Math.random() * 7) - 1
+          : Math.floor(Math.random() * 6);
+        secret.push(randomPick);
+      }
+      return secret;
+    } else {
+      //duplicates not allowed
+      let available = allowBlanks ? [-1, 0, 1, 2, 3, 4, 5] : [0, 1, 2, 3, 4, 5];
 
-    return secret;
+      for (let i = 0; i < 4; i++) {
+        const nOptions = available.length;
+        const randomIdx = Math.floor(Math.random() * available.length);
+        secret.push(available.splice(randomIdx, 1)[0]);
+      }
+      return secret;
+    }
   }
 
   giveFeedback(secret, guess) {

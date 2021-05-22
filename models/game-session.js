@@ -19,12 +19,15 @@ class Game {
 }
 
 class GameSession {
-  constructor(sessionPin, players, nGames) {
+  constructor(parameters) {
     /*
         id -> str, session id;
         players -> array[str] of users ids;
         mode -> str, "single-player" (against the clock), "multi-player" (unlimited time)
     */
+
+    const { sessionPin, players, nGames, allowDuplicates, allowBlanks } =
+      parameters;
 
     this.sessionPin = sessionPin;
     this.players = players;
@@ -32,6 +35,8 @@ class GameSession {
     this.scores = [0, 0];
     this.codeMaker = -1;
     this.codeCracker = -1;
+    this.allowDuplicates = allowDuplicates;
+    this.allowBlanks = allowBlanks;
 
     this.game = new Game();
   }

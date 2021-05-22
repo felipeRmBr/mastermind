@@ -15,6 +15,8 @@ const colors = ["blue", "yello", "green", "red", "white", "black"];
 const marbleColors = ["white", "red"];
 
 let soundActive = true;
+let duplicatesAllowed = undefined;
+let blanksAllowed = undefined;
 
 let nGames = -1;
 const currentRole = "CB"; // user always plays CB
@@ -347,6 +349,11 @@ const deactivateMarbleHoles = (columnIdx) => {
 };
 
 const updatePegHole = (e) => {
+  if (!duplicatesAllowed && guess.includes(activeColorIdx)) {
+    showErrormessage("Remember that duplicates are not allowed.");
+    return;
+  }
+
   if (soundActive) sounds.select.play();
   let pegHole = e.target;
   pegHole.className = `ball b${activeColorIdx}`;
@@ -796,16 +803,19 @@ socket.on("feedback-response", ({ feedback, secret, score }) => {
 
 const makeFirstContact = () => {
   return new Promise((resolve, reject) => {
-    socket.emit("first-contact", { sessionId }, ({ ok, nGamesResponse }) => {
-      if (ok) {
-        console.log("session found!!!!");
-        nGames = nGamesResponse;
-        resolve("First contact succesfull");
-      } else {
-        console.log("session not found");
-        resolve("First contact error!!");
+    socket.emit(
+      "first-contact",
+      { sessionId },
+      ({ ok, allowDuplicates, allowBlanks }) => {
+        if (ok) {
+          duplicatesAllowed = allowDuplicates;
+          blanksAllowed = allowBlanks;
+          resolve("First contact succesfull");
+        } else {
+          resolve("First contact error!!");
+        }
       }
-    });
+    );
   });
 };
 
@@ -834,11 +844,29 @@ const sendPegHoleUpdate = (pegHoleIdx, activeColorIdx) => {
 };
 
 const requestFeedback = () => {
-  if (guess.includes(-1)) {
+  const guessWithDuplicates = (guess) => {
+    let colorsCount = [0, 0, 0, 0, 0, 0];
+    guess.forEach((value) => {
+      colorsCount[value]++;
+    });
+
+    if (Math.max(colorsCount) > 1) return true;
+    else return false;
+  };
+
+  if (!duplicatesAllowed && guessWithDuplicates(guess)) {
     if (soundActive) sounds.error.play();
+    showErrormessage(
+      "Remember that duplicates are not allowed. Fix your guess."
+    );
+    return;
+  }
 
-    showErrormessage("Your guess is incomplete. Fill up the four peg holes.");
-
+  if (!blanksAllowed && guess.includes(-1)) {
+    if (soundActive) sounds.error.play();
+    showErrormessage(
+      "Your guess shuldn't have blanks. Fill up the four peg holes."
+    );
     return;
   }
 

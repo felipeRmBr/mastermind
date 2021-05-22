@@ -254,6 +254,14 @@ const changeActiveMarble = (e) => {
   activeMarble.classList.add("active-marble-picker");
 };
 
+const setColumnFocus = (columnIdx) => {
+  boardColumns[columnIdx].classList.add("on-focus");
+};
+
+const removeColumnFocus = (columnIdx) => {
+  boardColumns[columnIdx].classList.remove("on-focus");
+};
+
 const activatePegHoles = (columnIdx) => {
   boardColumns[columnIdx].classList.add(`active-column-r-${currentRole}`);
 
@@ -760,7 +768,8 @@ socket.on("feedback-response", ({ sessionId, feedback, secret }) => {
       const lastActiveColumnIdx = activeColumnIdx;
       activeColumnIdx++;
 
-      deactivatePegHoles(lastActiveColumnIdx);
+      removeColumnFocus(lastActiveColumnIdx);
+      setColumnFocus(activeColumnIdx);
       activatePegHoles(activeColumnIdx);
 
       mainButton.addEventListener("click", requestFeedback);
@@ -844,14 +853,14 @@ const requestFeedback = () => {
     return;
   }
 
-  switchActiveIndicator();
-
   const audio = new Audio("../audio/click.mp3");
   audio.play();
 
-  socket.emit("feedback-request", { sessionId, activeColumnIdx });
-
+  switchActiveIndicator();
+  deactivatePegHoles(lastActiveColumnIdx);
   resetGuess();
+
+  socket.emit("feedback-request", { sessionId, activeColumnIdx });
 
   // reset mainButton (remove eventListener should be last)
   mainButton.removeEventListener("click", requestFeedback);
